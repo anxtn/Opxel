@@ -1,13 +1,15 @@
-﻿using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
-using Opxel;
-using Opxel.AssetParsing;
-using System.Runtime.InteropServices;
+﻿//==========================================
+//  ________                       __
+//  \_____  \ _________  ___ ____ |  |  
+//   /   |   \\____ \  \/  // __ \|  |  
+//  /    |    \  |_> >    <\  ___/|  |__
+//  \_______  /   __/__/\_ \\___  >____/
+//          \/|__|        \/    \/
+//          
+// @author AM
+// ==========================================
 
-//foreach(string name in Enum.GetNames<PixelFormat>())
-//{
-//    Console.WriteLine($"case: PixelFormat.{name}:\nreturn PixelInternalFormat.{name};");
-//}
+using Opxel;
 
 using (OpxelGame opxelInstance = new OpxelGame())
 {
