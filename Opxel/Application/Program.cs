@@ -9,9 +9,9 @@
 // @author AM
 // ==========================================
 
-using Opxel;
+using Opxel.Application;
 
-using (OpxelGame opxelInstance = new OpxelGame())
+using (OpxelInstance opxelInstance = new OpxelInstance())
 {
     opxelInstance.Run();
 }

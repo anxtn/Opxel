@@ -8,9 +8,9 @@ using Opxel.Mathematics;
 using Opxel.Input;
 using Opxel.AssetParsing;
 
-namespace Opxel
+namespace Opxel.Application
 {
-    internal class OpxelGame : GameWindow
+    internal class OpxelInstance : GameWindow
     {
 
         private VertexArray vertexArray;
@@ -24,17 +24,17 @@ namespace Opxel
 
         private float viewport;
 
-        public OpxelGame() :     
-        base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = new Vector2i(1600,900)})
+        public OpxelInstance() :
+        base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = new Vector2i(1600, 900) })
         {
-            
+
         }
 
         protected override void OnLoad()
         {
             int major = OpenGLParameter.MajorVersion;
             int minor = GL.GetInteger(GetPName.MinorVersion);
-            base.CenterWindow();
+            CenterWindow();
 
             Console.WriteLine($"Using Open GL Version {major}");
             Console.WriteLine(BitConverter.IsLittleEndian ? "Using Little Endian" : "Using Big Endian");
@@ -93,12 +93,12 @@ namespace Opxel
         {
             float deltaTime = (float)e.Time;
 
-            OpxelInput.Update(base.KeyboardState,base.MouseState);
+            OpxelInput.Update(KeyboardState, MouseState);
             camera.Update(deltaTime);
             shaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
 
             rotY += deltaTime;
-            mesh.Transform.RotateByDegrees(new Vector3(0,0, rotY));
+            mesh.Transform.RotateByDegrees(new Vector3(0, 0, rotY));
 
             Debugger.CheckGLError();
             base.OnUpdateFrame(e);
@@ -108,7 +108,7 @@ namespace Opxel
         {
             base.OnRenderFrame(e);
 
-            
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             mesh.Render();
 
