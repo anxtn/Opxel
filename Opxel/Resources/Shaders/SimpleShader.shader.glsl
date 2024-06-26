@@ -26,7 +26,7 @@ void main()
 #ifdef FRAGMENT
 
 in vec4 vColor;
-in vec3 vTransformedNormal;
+ in vec3 vTransformedNormal;
 
 out vec4 fColor;
 
@@ -34,7 +34,7 @@ const vec3 lightDirection = vec3(0,-1,0);
 
 void main()
 {
-float diff = dot(vTransformedNormal, lightDirection);
+float diff = 1 - (0.45 * 0.7 * dot(vTransformedNormal, lightDirection));
 
 fColor = vColor * diff;
 }
