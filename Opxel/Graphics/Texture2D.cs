@@ -1,10 +1,11 @@
 ﻿using OpenTK.Graphics.OpenGL;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Opxel.Content;
+using StbImageSharp;
 
 namespace Opxel.Graphics
 {
 
-    internal class Texture2D : IDisposable
+    internal class Texture2D : IDisposable, IAssetLoadable
     {
         private bool disposed;
 
@@ -46,6 +47,18 @@ namespace Opxel.Graphics
         ~Texture2D()
         {
             Dispose();
+        }
+
+        public static object Load<T>(string path)
+        {
+            StbImage.stbi_set_flip_vertically_on_load(1);
+            ImageResult imageResult = new ImageResult();
+            using(FileStream stream = File.OpenRead(path))
+            {
+                imageResult = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+            }
+            Texture2D texture = new Texture2D(imageResult.Width, imageResult.Height, imageResult.Data);
+            return texture;
         }
     }
 }

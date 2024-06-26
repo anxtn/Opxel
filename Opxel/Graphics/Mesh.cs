@@ -2,10 +2,12 @@
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System.Reflection.PortableExecutable;
+using Opxel.Content;
+using Opxel.AssetParsing;
 
 namespace Opxel.Graphics
 {
-    internal class Mesh
+    internal class Mesh : IAssetLoadable
     {
         public Transform Transform;
 
@@ -146,6 +148,11 @@ namespace Opxel.Graphics
                 colors[i] = color;
             }
             this.Colors = colors;
+        }
+
+        public static object Load<T>(string path)
+        {
+            return MD2Parser.ParseFile(path).ToMesh();
         }
     }
 }
