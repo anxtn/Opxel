@@ -1,10 +1,11 @@
 ﻿using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
 using System.Text;
+using Opxel.Content;
 
 namespace Opxel.Graphics
 {
-    public class ShaderProgram : IDisposable
+    public class ShaderProgram : IDisposable, IAssetLoadable
     {
         public readonly int Handle;
         public readonly Dictionary<ShaderType, string> ShaderPaths;
@@ -126,6 +127,13 @@ namespace Opxel.Graphics
             Dispose();
         }
 
+        //interface
+
+        public static object Load(string path)
+        {
+            return ShaderProgram.FromShaderFormatFile(path);
+        }
+
         //statics
         public static ShaderProgram FromCodes(params (string code, ShaderType shaderType)[] shaderCodes)
         {
@@ -168,7 +176,7 @@ namespace Opxel.Graphics
 
         public static ShaderProgram FromShaderFormatFile(string path)
         {
-           return ShaderFileParser.ParseCode(File.ReadAllText(path));
+            return ShaderFileParser.ParseCode(File.ReadAllText(path));
         }
     }
 

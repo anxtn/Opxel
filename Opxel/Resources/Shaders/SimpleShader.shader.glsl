@@ -30,7 +30,7 @@ in vec4 vColor;
 
 out vec4 fColor;
 
-const vec3 lightDirection = vec3(0,-1,0);
+const vec3 lightDirection = vec3(1,-1,0);
 
 void main()
 {

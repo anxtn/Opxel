@@ -150,7 +150,7 @@ namespace Opxel.Graphics
             this.Colors = colors;
         }
 
-        public static object Load<T>(string path)
+        public static object Load(string path)
         {
             return MD2Parser.ParseFile(path).ToMesh();
         }

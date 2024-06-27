@@ -10,6 +10,6 @@ namespace Opxel.Content
 {
     internal interface IAssetLoadable
     {
-        public abstract static object Load<T>(string path);
+        public abstract static object Load(string path);
     }
 }

@@ -49,7 +49,7 @@ namespace Opxel.Graphics
             Dispose();
         }
 
-        public static object Load<T>(string path)
+        public static object Load(string path)
         {
             StbImage.stbi_set_flip_vertically_on_load(1);
             ImageResult imageResult = new ImageResult();

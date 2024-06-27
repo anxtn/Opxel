@@ -278,8 +278,6 @@ new Vector3( -0.688191f, -0.587785f, -0.425325f )
                     vertex.Z * frame.Scale.Z + frame.Translate.Z);
 
                 (vertices[i].Y, vertices[i].Z) = (vertices[i].Z, vertices[i].Y);
-
-                Console.WriteLine(vertices[i]);
             }
 
             return vertices;

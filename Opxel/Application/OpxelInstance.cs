@@ -7,6 +7,9 @@ using Opxel.Graphics;
 using Opxel.Mathematics;
 using Opxel.Input;
 using Opxel.AssetParsing;
+using Opxel.Content;
+
+//TODO: Cubemap class
 
 namespace Opxel.Application
 {
@@ -14,6 +17,7 @@ namespace Opxel.Application
     {
 
         private VertexArray vertexArray;
+        private AssetManager assetManager;
 
         private ShaderProgram shaderProgram;
 
@@ -25,7 +29,7 @@ namespace Opxel.Application
         private float viewport;
 
         public OpxelInstance() :
-        base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = new Vector2i(1600, 900) })
+        base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = new Vector2i(1600, 900), StartVisible = false, Title="Opxel"})
         {
 
         }
@@ -36,40 +40,23 @@ namespace Opxel.Application
             int minor = GL.GetInteger(GetPName.MinorVersion);
             CenterWindow();
 
+            string iconPath = "C:\\Users\\Anton Müller\\Desktop\\Opxel\\Opxel\\Resources\\Icons\\OpxcelIconPNG.png";
+            Icon = ImageLoader.CreateWindowIcon(iconPath);
+
+            IsVisible = true;   
+
             Console.WriteLine($"Using Open GL Version {major}");
             Console.WriteLine(BitConverter.IsLittleEndian ? "Using Little Endian" : "Using Big Endian");
 
-
-            //GL.Enable(EnableCap.CullFace);
-            //GL.CullFace(CullFaceMode.Back);
+            assetManager = new AssetManager();
+            shaderProgram = assetManager.Load<ShaderProgram>("Shaders/SimpleShader.shader.glsl");
+            Mesh.DefaultShaderProgram = shaderProgram;
+            assetManager.PreLoadAll();
 
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Enable(EnableCap.DepthTest);
 
-            Vector3[] verticesV3 =
-           {
-                new Vector3(-0.5f, 0.5f, 0f), //TopLeft
-               new Vector3( 0.5f, 0.5f, 0f),  //TopRight 
-               new Vector3( 0.5f, -0.5f, 0f), //BottomRight
-                new Vector3(-0.5f, -0.5f, 0f) //BottomLeft
-            };
-
-            Color4[] colorsC4 =
-           {
-                new Color4( 1f,0f,0f,1f),
-                new Color4(1f,1f,0f,1f),
-                new Color4(0f,0f,1f,1f),
-                new Color4(0f,1f,0f,1f)
-            };
-
-            uint[] indices =
-            {
-                0,1,2,0,2,3
-            };
-
-            string shaderPrgPath = @"C:\Users\Anton Müller\Desktop\Opxel\Opxel\Resources\Shaders\SimpleShader.shader.glsl";
-            shaderProgram = ShaderProgram.FromShaderFormatFile(shaderPrgPath);
-            Mesh.DefaultShaderProgram = shaderProgram;
+            
 
             viewport = (float)Size.X / Size.Y;
             camera = new FlyingCamera();
@@ -77,15 +64,15 @@ namespace Opxel.Application
             shaderProgram.Use();
             shaderProgram.SetUniform("uViewport", viewport);
 
-            //mesh = new Mesh();
-            //mesh.Indices = indices;
-            //mesh.Positions = verticesV3;
-            //mesh.Colors = colorsC4;
+            mesh = assetManager.Load<Mesh>("Models/Monkey.md2");
 
-            string path = "C:\\Users\\Anton Müller\\Downloads\\Monkey.md2";
-
-            MD2Object obj = MD2Parser.ParseFile(path);
-            mesh = obj.ToMesh();
+            Console.WriteLine("########## Assets ##############");
+            foreach (string assetPath in assetManager.LoadedAssets.Keys)
+            {
+                Asset asset = assetManager.LoadedAssets[assetPath];
+                string name = Path.GetFileName(assetPath);
+                Console.WriteLine($"File: {name}; Type = {asset.Type}");
+            }
 
             base.OnLoad();
         }
@@ -98,7 +85,7 @@ namespace Opxel.Application
             shaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
 
             rotY += deltaTime;
-            mesh.Transform.RotateByDegrees(new Vector3(0, 0, rotY));
+            //mesh.Transform.RotateByDegrees(new Vector3(0, 0, rotY));
 
             Debugger.CheckGLError();
             base.OnUpdateFrame(e);
