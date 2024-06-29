@@ -17,36 +17,9 @@ namespace Opxel.Debug
             Console.ForegroundColor = preColor;
         }
 
-        //public static void LogColorFormat(FormattableString formattable)
-        //{
-        //    string formatString = formattable.Format;
-        //    int argIndex = 0;
-        //    int strStart = 0;
-
-        //    for(int i = 0; i < formatString.Length;i++)
-        //    {
-        //        if(formatString[i] == '{')
-        //        {
-        //            if((i + 1 < formatString.Length) && formatString[i+1] == '{')
-        //            {
-        //                strStart = i;
-        //                i++;
-        //            }
-
-        //        }
-        //        else if(formatString[i] == '}')
-        //        {
-
-        //        }
-        //    }
-
-        //    Console.WriteLine(formatString);
-        //    //formatString.Split()
-        //}
-
         public static void Log(object message)
         {
-            LogColor(message, ErrorColor);
+            LogColor(message, DefaultColor);
         }
         public static void LogError(object message)
         {
