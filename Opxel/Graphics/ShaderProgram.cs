@@ -5,7 +5,7 @@ using Opxel.Content;
 
 namespace Opxel.Graphics
 {
-    public class ShaderProgram : IDisposable, IAssetLoadable
+    internal class ShaderProgram : IDisposable, IAssetLoadable
     {
         public readonly int Handle;
         public readonly Dictionary<ShaderType, string> ShaderPaths;
@@ -129,9 +129,9 @@ namespace Opxel.Graphics
 
         //interface
 
-        public static object Load(string path)
+        public static IAssetLoadable Load(string path)
         {
-            return ShaderProgram.FromShaderFormatFile(path);
+            return (IAssetLoadable)ShaderProgram.FromShaderFormatFile(path);
         }
 
         //statics

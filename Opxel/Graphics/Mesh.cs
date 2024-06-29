@@ -7,7 +7,7 @@ using Opxel.AssetParsing;
 
 namespace Opxel.Graphics
 {
-    internal class Mesh : IAssetLoadable
+    internal class Mesh : IAssetLoadable, IDisposable
     {
         public Transform Transform;
 
@@ -16,11 +16,16 @@ namespace Opxel.Graphics
         public GraphicBuffer IndexBuffer;
         public GraphicBuffer NormalBuffer;
 
-        public static ShaderProgram DefaultShaderProgram;
+        
+
+        [StaticPreLoad("Shaders/SimpleShader.shader.glsl")]
+        public static ShaderProgram DefaultShaderProgram = null!; //Nullable c# Gedöhns ╰( ° ʖ ° )つ──☆*
 
         public VertexArray VertexArray;
 
         public ShaderProgram ShaderProgram;
+
+        private bool disposed; 
 
         public Vector3[] Positions {
             get
@@ -71,6 +76,7 @@ namespace Opxel.Graphics
 
         public Mesh()
         {
+            disposed = false;
             Transform = new Transform();
             PositionBuffer = new GraphicBuffer(BufferTarget.ArrayBuffer);
             NormalBuffer = new GraphicBuffer(BufferTarget.ArrayBuffer);
@@ -150,9 +156,29 @@ namespace Opxel.Graphics
             this.Colors = colors;
         }
 
-        public static object Load(string path)
+        public static IAssetLoadable Load(string path)
         {
             return MD2Parser.ParseFile(path).ToMesh();
         }
+
+        public void Dispose()
+        {
+            if(disposed) 
+                return;
+
+            PositionBuffer.Dispose();   
+            IndexBuffer.Dispose();
+            ColorBuffer.Dispose();
+            NormalBuffer.Dispose();
+            VertexArray.Dispose();
+
+            disposed = true;
+        }
+
+        ~Mesh()
+        {
+            Dispose();
+        }
+
     }
 }
