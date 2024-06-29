@@ -14,7 +14,7 @@ out vec3 vTransformedNormal;
 
 void main()
 {
-    vec4 position = vec4(aPosition.x, aPosition.y, aPosition.z,1) * uViewProjection * uModel;
+    vec4 position = vec4(aPosition.x, aPosition.y, aPosition.z,1)* uModel * uViewProjection ;
     position.y *= uViewport;
     gl_Position = position;
     vColor = aColor;
