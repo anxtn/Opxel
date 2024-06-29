@@ -5,7 +5,7 @@ namespace Opxel.Graphics
 {
     public class Shader
     {
-        public int Handle;
+        public readonly int Handle;
         public readonly ShaderType Type;
         public string? Path { get; private set; }
         public bool Compiled => GetParameter(ShaderParameter.CompileStatus) == 1;

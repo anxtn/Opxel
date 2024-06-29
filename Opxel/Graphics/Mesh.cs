@@ -11,19 +11,17 @@ namespace Opxel.Graphics
     {
         public Transform Transform;
 
-        public GraphicBuffer PositionBuffer;
-        public GraphicBuffer ColorBuffer;
-        public GraphicBuffer IndexBuffer;
-        public GraphicBuffer NormalBuffer;
-
-        
+        private GraphicBuffer PositionBuffer;
+        private GraphicBuffer ColorBuffer;
+        private GraphicBuffer IndexBuffer;
+        private GraphicBuffer NormalBuffer;
 
         [StaticPreLoad("Shaders/SimpleShader.shader.glsl")]
         public static ShaderProgram DefaultShaderProgram = null!; //Nullable c# Gedöhns ╰( ° ʖ ° )つ──☆*
 
-        public VertexArray VertexArray;
+        private VertexArray VertexArray;
 
-        public ShaderProgram ShaderProgram;
+        public ShaderProgram ShaderProgram { get; set; }
 
         private bool disposed; 
 

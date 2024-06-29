@@ -8,9 +8,9 @@ namespace Opxel.Content
 {
     internal class Asset
     {
-        public string SourcePath;
-        public IAssetLoadable Value;
-        public Type Type;
+        public readonly string SourcePath;
+        public readonly IAssetLoadable Value;
+        public readonly Type Type;
         public readonly AssetManager AssetManager;
 
         public Asset(string sourcePath, IAssetLoadable value, Type type, AssetManager assetManager)

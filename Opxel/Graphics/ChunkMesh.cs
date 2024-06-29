@@ -6,9 +6,10 @@ namespace Opxel.Graphics
 {
     internal class ChunkMesh
     {
-        public Vector3i Position;
-        public GraphicBuffer VertexBuffer;
-        public GraphicBuffer IndexBuffer;
+        public readonly Vector3i Position;
+
+        private GraphicBuffer VertexBuffer;
+        private GraphicBuffer IndexBuffer;
 
         [StaticPreLoad("Shaders/ChunkShader.shader.glsl")]
         public static ShaderProgram ChunkShaderProgram = null!;

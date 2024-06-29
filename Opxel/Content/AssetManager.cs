@@ -20,7 +20,7 @@ namespace Opxel.Content
     internal class AssetManager
     {
         public string RootDirectory { get; set; } = @"../../../Resources/";
-        public Dictionary<string /* path */, Asset> LoadedAssets;
+        public readonly Dictionary<string /* path */, Asset> LoadedAssets;
 
         private readonly MethodInfo generalGenericLoadMethod;
 

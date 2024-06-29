@@ -10,7 +10,7 @@ uniform mat4 uViewProjection;
 uniform float uViewport;
 
 out vec4 vColor;
-out vec3 vTransformedNormal;
+out  vec3 vTransformedNormal;
 
 void main()
 {
@@ -26,11 +26,11 @@ void main()
 #ifdef FRAGMENT
 
 in vec4 vColor;
- in vec3 vTransformedNormal;
+in vec3 vTransformedNormal;
 
 out vec4 fColor;
 
-const vec3 lightDirection = vec3(1,-1,0);
+const vec3 lightDirection = vec3(0.03,-1,0);
 
 void main()
 {
