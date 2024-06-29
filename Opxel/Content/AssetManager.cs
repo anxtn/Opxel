@@ -69,7 +69,7 @@ namespace Opxel.Content
             else
             {
                 IAssetLoadable assetValue = T.Load(absolutePath);
-                Asset asset = new Asset(absolutePath, assetValue, typeof(T));
+                Asset asset = new Asset(absolutePath, assetValue, typeof(T), this);
                 LoadedAssets.Add(absolutePath, asset);
                 return (T)assetValue;
             }
