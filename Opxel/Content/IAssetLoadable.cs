@@ -8,8 +8,17 @@ using System.Threading.Tasks;
 
 namespace Opxel.Content
 {
-    internal interface IAssetLoadable
+    internal interface IAssetLoadable : IDisposable
     {
-        public abstract static object Load(string path);
+        public abstract static IAssetLoadable Load(string path);
+        public static bool IsLoadableFile(string path)
+        {
+            return true;
+        }
+
+        public void Unload()
+        {
+            Dispose();
+        }
     }
 }
