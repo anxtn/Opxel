@@ -6,7 +6,6 @@ using Opxel.Debug;
 using Opxel.Graphics;
 using Opxel.Mathematics;
 using Opxel.Input;
-using Opxel.AssetParsing;
 using Opxel.Content;
 
 //TODO: Cubemap class
@@ -15,17 +14,10 @@ namespace Opxel.Application
 {
     internal class OpxelInstance : GameWindow
     {
-
-        private VertexArray vertexArray;
         private AssetManager assetManager;
-
-        private ShaderProgram shaderProgram;
-
         private FlyingCamera camera;
-
         private Mesh mesh;
         private float rotY = 0;
-
         private float viewport;
 
         public OpxelInstance() :
@@ -49,9 +41,8 @@ namespace Opxel.Application
             Console.WriteLine(BitConverter.IsLittleEndian ? "Using Little Endian" : "Using Big Endian");
 
             assetManager = new AssetManager();
-            shaderProgram = assetManager.Load<ShaderProgram>("Shaders/SimpleShader.shader.glsl");
-            Mesh.DefaultShaderProgram = shaderProgram;
             assetManager.PreLoadAll();
+            assetManager.LoadAll();
 
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Enable(EnableCap.DepthTest);
@@ -61,18 +52,12 @@ namespace Opxel.Application
             viewport = (float)Size.X / Size.Y;
             camera = new FlyingCamera();
 
-            shaderProgram.Use();
-            shaderProgram.SetUniform("uViewport", viewport);
+            Mesh.DefaultShaderProgram.Use();
+            Mesh.DefaultShaderProgram.SetUniform("uViewport", viewport);
+
+            
 
             mesh = assetManager.Load<Mesh>("Models/Monkey.md2");
-
-            Console.WriteLine("########## Assets ##############");
-            foreach (string assetPath in assetManager.LoadedAssets.Keys)
-            {
-                Asset asset = assetManager.LoadedAssets[assetPath];
-                string name = Path.GetFileName(assetPath);
-                Console.WriteLine($"File: {name}; Type = {asset.Type}");
-            }
 
             base.OnLoad();
         }
@@ -82,10 +67,11 @@ namespace Opxel.Application
 
             OpxelInput.Update(KeyboardState, MouseState);
             camera.Update(deltaTime);
-            shaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
+            Mesh.DefaultShaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
 
             rotY += deltaTime;
-            //mesh.Transform.RotateByDegrees(new Vector3(0, 0, rotY));
+
+            mesh.Transform.RotateByRadiants(new Vector3(0, rotY, 0));
 
             Debugger.CheckGLError();
             base.OnUpdateFrame(e);
