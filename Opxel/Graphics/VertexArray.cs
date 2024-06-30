@@ -22,13 +22,13 @@ namespace Opxel.Graphics
                 switch(attrib.MethodType)
                 {
                     case VertexAttribPointerMethodType.Default:
-                        GL.VertexAttribPointer(attrib.Index, attrib.ComponentCount, attrib.Type, attrib.Normalized, attrib.SizeInBytes, 0);
+                        GL.VertexAttribPointer(attrib.Index, attrib.ComponentCount, attrib.Type, attrib.Normalized, attrib.SizeInBytes, attrib.Offset);
                         break;
                     case VertexAttribPointerMethodType.Integer:
-                        GL.VertexAttribIPointer(attrib.Index, attrib.ComponentCount, attrib.VertexAttribIntegerType, attrib.SizeInBytes, IntPtr.Zero);
+                        GL.VertexAttribIPointer(attrib.Index, attrib.ComponentCount, attrib.VertexAttribIntegerType, attrib.SizeInBytes, attrib.Offset);
                         break;
                     case VertexAttribPointerMethodType.Double:
-                        GL.VertexAttribLPointer(attrib.Index, attrib.ComponentCount, attrib.VertexAttribDoubleType , attrib.SizeInBytes, IntPtr.Zero);
+                        GL.VertexAttribLPointer(attrib.Index, attrib.ComponentCount, attrib.VertexAttribDoubleType , attrib.SizeInBytes, attrib.Offset);
                         break;
                 }
 
