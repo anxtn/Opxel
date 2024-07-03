@@ -213,18 +213,23 @@ namespace Opxel.Content
 
             FieldInfo[] fieldsToPreload = StaticPreLoadAttribute.GetAllPreloadField();
 
+            int preLoadCount = 0;
+
             foreach(var field in fieldsToPreload)
             {
                 if(field.IsStatic && field.IsDefined(typeof(StaticPreLoadAttribute), true))
                 {
                     StaticPreLoadAttribute attrib = field.GetCustomAttribute<StaticPreLoadAttribute>() ?? null!;
-                    object loadedValue = Load(attrib.AssetPath);
+                    attrib.SpecificType = field.FieldType;
+                    object loadedValue = Load(attrib.AssetPath,attrib.SpecificType);
                     field.SetValue(null, loadedValue);
+                    preLoadCount++;
                 }
             }
 
             stopwatch.Stop();
-            Opxel.Debug.Debugger.Log($"Loaded all preload assets in {stopwatch.ElapsedMilliseconds} ms.");
+
+            Opxel.Debug.Debugger.Log($"Loaded {preLoadCount} preload assets in {stopwatch.ElapsedMilliseconds} ms.");
         }
     }
 }

@@ -6,13 +6,14 @@ namespace Opxel.Content
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = true)]
     internal sealed class StaticPreLoadAttribute : Attribute
     {
-        private readonly string assetPath;
-        public string AssetPath => assetPath;
+        private readonly string _assetPath;
+        public string AssetPath => _assetPath;
+        public Type? SpecificType { get; set; } //AssetManager class sets this prop in PreLoadAll() method
 
 
         public StaticPreLoadAttribute(string assetPath)
         {
-            this.assetPath = assetPath;
+            this._assetPath = assetPath;
         }
 
         private static bool ValidateField(FieldInfo field)
