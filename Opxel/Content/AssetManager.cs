@@ -37,7 +37,7 @@ namespace Opxel.Content
 
             if(generalGenericLoadMethod == null)
             {
-                throw new Exception("Internal error: Could not find the generic Load Method");
+                throw new Exception("Internal error: Could not find the generic Load method");
             }
         }
 
@@ -82,6 +82,28 @@ namespace Opxel.Content
             return AssetFileTypes.ContainsKey(extention);
         }
 
+        public IAssetLoadable Load(string assetPath, Type assetType)
+        {
+            if(!assetType.GetInterfaces().Contains(typeof(IAssetLoadable)))
+            {
+                throw new ArgumentException($"Unsupported assetType. The assetType must implement the {nameof(IAssetLoadable)} interface. (type: {assetType})");
+            }
+
+            string absolutePath = GetAbsolutePathFromAssetPath(assetPath);
+
+            if(IsAssetLoaded(absolutePath))
+            {
+                string fileName = Path.GetFileName(absolutePath);
+                Debugger.LogWarning($"Tried loading already loaded asset. (asset file: {fileName})");
+                return LoadedAssets[absolutePath].Value;
+            }
+            else
+            {
+                MethodInfo genericLoadMethod = generalGenericLoadMethod.MakeGenericMethod(assetType);
+                return (IAssetLoadable)(genericLoadMethod.Invoke(this, new[] { absolutePath }) ?? throw new NullReferenceException());
+            }
+        }
+
         public IAssetLoadable Load(string assetPath)
         {
             string absolutePath = GetAbsolutePathFromAssetPath(assetPath);
@@ -96,16 +118,16 @@ namespace Opxel.Content
 
             Type assetType = AssetFileTypes[extention];
 
-            if(IsAssetLoaded(absolutePath))
+            return Load(assetPath, assetType);
+        }
+
+        public void LoadFolder(string folderPath)
+        {
+            FileAttributes attr = File.GetAttributes(folderPath);
+
+            if(!attr.HasFlag(FileAttributes.Directory))
             {
-                string fileName = Path.GetFileName(absolutePath);
-                Debugger.LogWarning($"Tried loading already loaded asset. (asset file: {fileName})");
-                return LoadedAssets[absolutePath].Value;
-            }
-            else
-            {
-                MethodInfo genericLoadMethod = generalGenericLoadMethod.MakeGenericMethod(assetType);
-                return (IAssetLoadable)(genericLoadMethod.Invoke(this, new[] { absolutePath }) ?? throw new NullReferenceException());
+                throw new ArgumentException($"Path must lead to a Directory. (path: {folderPath})");
             }
         }
 
