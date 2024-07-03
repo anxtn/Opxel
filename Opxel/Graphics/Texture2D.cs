@@ -14,7 +14,7 @@ namespace Opxel.Graphics
         public readonly int Handle;
 
         public TextureMagFilter MagFilter;
-        public TextureMagFilter MinFilter;
+        public TextureMinFilter MinFilter;
 
         public PixelInternalFormat Format;
 
