@@ -1,5 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using Opxel.Helpers.Extentions;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace Opxel.Debug
 {
@@ -8,6 +10,30 @@ namespace Opxel.Debug
         public static ConsoleColor DefaultColor = ConsoleColor.White;
         public static ConsoleColor ErrorColor = ConsoleColor.Red;
         public static ConsoleColor WarningColor = ConsoleColor.Yellow;
+
+        //Idk aber vielleicht könnte es unter bestimmten Bedingungen Probleme mit dem GC geben wegen dem DebugProc
+        public static void SetupOpenGLDebugging()
+        {
+            DebugProc DebugProc = (source, type, id, severity, length, message, userParam) =>
+            {
+                string messageString = Marshal.PtrToStringAnsi(message, length);
+                switch(type)
+                {
+                    case DebugType.DebugTypeError:
+                        LogError($"OpenGL Error: ({((ErrorCode)id).GetEnumName()}): {messageString}");
+                        break;
+                    case DebugType.DebugTypePerformance:
+                        LogWarning($"OpenGL Warning: ({((ErrorCode)id).GetEnumName()}): {messageString}");
+                        break;
+                    default:
+                        ; //Den Debug speichern zum Debuggen
+                        break;
+                }
+            };
+            GL.Enable(EnableCap.DebugOutput);
+            GL.Enable(EnableCap.DebugOutputSynchronous);
+            GL.DebugMessageCallback(DebugProc, 0);
+        }
 
         public static void LogColor(object message, ConsoleColor color)
         {
@@ -23,7 +49,7 @@ namespace Opxel.Debug
         }
         public static void LogError(object message)
         {
-            LogColor(message, ErrorColor);
+            LogColor($"Error: {message}", ErrorColor);
         }
 
         public static void LogWarning(object message)
@@ -42,5 +68,6 @@ namespace Opxel.Debug
                 LogError(message);
             }
         }
+
     }
 }
