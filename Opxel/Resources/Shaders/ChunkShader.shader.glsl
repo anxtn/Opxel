@@ -1,38 +1,36 @@
-#version 400 core
+#version 420
 
 #ifdef VERTEX
-layout(location = 0) in uint aVertexData;
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec2 aUv;
 
 uniform mat4 uViewProjection;
 uniform float uViewport;
+uniform vec3 uChunkPosition;
 
-out vec4 vColor;
+//out vec4 vColor;
+out vec2 vUv;
 
 void main()
 {
-    
-    float aPosX = bitfieldExtract(aVertexData, 0, 8);
-    float aPosY = bitfieldExtract(aVertexData, 8, 8);
-    float aPosZ = bitfieldExtract(aVertexData, 16, 8);
-    
-    vColor = vec4(0.8,0.8,0.8,1.0);
-
-    aPosY *= uViewport;
-    gl_Position = vec4(aPosX, aPosY, aPosZ,1);
+    vec4 position = vec4(aPosition + uChunkPosition,1) * uViewProjection;
+    position.y *= uViewport;
+    vUv = aUv;
+    gl_Position = position;
 }
 #endif
 
 #ifdef FRAGMENT
 
-in vec4 vColor;
+//in vec4 vColor;
+in vec2 vUv;
+
+uniform sampler2D uTexture;
 
 out vec4 fColor;
 
-const vec3 lightDirection = vec3(1,-1,0);
-
 void main()
 {
-
-fColor = vColor;
+    fColor = texture2D(uTexture,vUv);
 }
 #endif

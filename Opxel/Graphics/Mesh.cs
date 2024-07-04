@@ -6,7 +6,7 @@ using Opxel.Content;
 using Opxel.AssetParsing;
 
 namespace Opxel.Graphics
-{
+{ 
     internal class Mesh : IAssetLoadable, IDisposable
     {
         public Transform Transform;
@@ -102,7 +102,7 @@ namespace Opxel.Graphics
             GL.DrawElements(PrimitiveType.Triangles, IndexBuffer.Length, DrawElementsType.UnsignedInt, 0);
         }
 
-        //Code From Sebastian Legue
+        //Code From Sebastian Lague
         public void CalculateNormals()
         {
             Vector3[] normals = new Vector3[PositionBuffer.Length];

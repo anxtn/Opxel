@@ -18,6 +18,7 @@ namespace Opxel.Graphics
         public readonly VertexAttribDoubleType VertexAttribDoubleType;
         public readonly string Name;
         public readonly int Offset;
+        public readonly int Stride;
 
         public VertexAttribute(GraphicBuffer buffer, int index, int componentCount, VertexAttribPointerType type, int componentSize,int offset = 0, bool normalized = false,
             VertexAttribPointerMethodType methodType = VertexAttribPointerMethodType.Default, VertexAttribIntegerType vertexAttribIntegerType = (VertexAttribIntegerType) (-1),
@@ -44,10 +45,11 @@ namespace Opxel.Graphics
             this.Name = name;
             this.Offset = offset;
         }
-        public VertexAttribute(GraphicBuffer buffer, int index, int componentCount, Type type, int componentSize,int offset = 0, bool normalized = false)
-            : this(buffer, index, componentCount, TypeToVertexAttribPointerType(type), componentSize,offset,  normalized)
-        { }
-
+        public VertexAttribute(GraphicBuffer buffer, int index, int componentCount, Type componentType, int componentSize,int offset = 0, int stride = 0, bool normalized = false)
+            : this(buffer, index, componentCount, TypeToVertexAttribPointerType(componentType), componentSize,offset,  normalized)
+        { 
+            this.Stride = stride;
+        }
 
         public static VertexAttribPointerType TypeToVertexAttribPointerType(Type type)
         {

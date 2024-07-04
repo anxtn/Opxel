@@ -80,7 +80,7 @@ namespace Opxel.Graphics
         public Matrix4 ViewProjectionMatrix { get; private set; }
 
         protected Vector3 _position;
-        protected float _fov = MathF.PI / 2f - 0.1f;
+        protected float _fov = MathF.PI / 2.2f;
         protected float _aspectRatio = 16f / 9f;
         protected float _pitch = 0f;
         protected float _yaw = 0f;
