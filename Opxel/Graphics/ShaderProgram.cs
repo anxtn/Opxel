@@ -14,7 +14,7 @@ namespace Opxel.Graphics
 
         public static ShaderProgram activeShaderProgram;
 
-        public unsafe ShaderProgram(params Shader[] shaders)
+        public ShaderProgram(params Shader[] shaders)
         {
             this.Handle = GL.CreateProgram();
             disposed = false;
@@ -79,22 +79,22 @@ namespace Opxel.Graphics
             GL.Uniform1(GetUniformLocation(name), value);
         }
 
-        public unsafe void SetUniform(string name, ref Matrix3 matrix3, bool transpose = true)
+        public void SetUniform(string name, ref Matrix3 matrix3, bool transpose = true)
         {
             GL.UniformMatrix3(GetUniformLocation(name), transpose, ref matrix3);
         }
 
-        public unsafe void SetUniform(string name, Matrix3 matrix3, bool transpose = true)
+        public void SetUniform(string name, Matrix3 matrix3, bool transpose = true)
         {
             GL.UniformMatrix3(GetUniformLocation(name), transpose, ref matrix3);
         }
 
-        public unsafe void SetUniform(string name, ref Matrix4 matrix4, bool transpose = true)
+        public void SetUniform(string name, ref Matrix4 matrix4, bool transpose = true)
         {
             GL.UniformMatrix4(GetUniformLocation(name), transpose, ref matrix4);
         }
 
-        public unsafe void SetUniform(string name, Matrix4 matrix4, bool transpose = true)
+        public void SetUniform(string name, Matrix4 matrix4, bool transpose = true)
         {
             GL.UniformMatrix4(GetUniformLocation(name), transpose, ref matrix4);
         }
@@ -108,7 +108,7 @@ namespace Opxel.Graphics
         public unsafe T ReadUniform<T>(string name) where T : unmanaged
         {
             T uniformData;
-            GL.GetUniform(this.Handle, GetUniformLocation(name), (float*)&uniformData);
+            GL.GetUniform(this.Handle, GetUniformLocation(name),(float*)& uniformData);
             return uniformData;
         }
 

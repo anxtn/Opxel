@@ -9,7 +9,7 @@ namespace Opxel.Graphics
         public readonly BufferUsageHint Usage;
         public readonly BufferTarget Target;
         public int Length { get; private set; }
-        public int ByteSize { get; private set; }
+        public int ByteLength { get; private set; }
 
         private bool disposed;
         public GraphicBuffer(BufferTarget type, BufferUsageHint usage)
@@ -17,7 +17,7 @@ namespace Opxel.Graphics
             disposed = false;
             Handle = GL.GenBuffer();
             Length = -1;
-            ByteSize = -1;
+            ByteLength = -1;
             this.Target = type;
             this.Usage = usage;
         }
@@ -26,19 +26,27 @@ namespace Opxel.Graphics
             : this(type, BufferUsageHint.StaticDraw)
         { }
 
-        public unsafe void SetData<T>(T[] data) where T : unmanaged
+        public void SetData<T>(T[] data) where T : unmanaged
         {
-            Bind();
-            GL.BufferData(Target, sizeof(T) * data.Length, data, Usage);
             Length = data.Length;
-            ByteSize = Length * sizeof(T);
+            ByteLength = Length * Marshal.SizeOf<T>();
+            Bind();
+            GL.BufferData(Target, ByteLength, data, Usage);
         }
 
-        public unsafe T[] ReadData<T>() where T : unmanaged
+        public void SetData<T>(Span<T> data) where T : unmanaged
+        {
+            Length = data.Length;
+            ByteLength = Length * Marshal.SizeOf<T>();
+            Bind();
+            GL.BufferData<T>(Target, Length,data.ToArray(), Usage);
+        }
+
+        public T[] ReadData<T>() where T : unmanaged
         {
             T[] data = new T[Length];
             Bind();
-            GL.GetBufferSubData(Target, IntPtr.Zero, sizeof(T) * Length, data);
+            GL.GetBufferSubData(Target, IntPtr.Zero, ByteLength * Length, data);
             return data;
         }
 
