@@ -15,6 +15,7 @@ namespace Opxel.Graphics
             disposed = false;
             this.Attributes = attributes;
             GL.BindVertexArray(this.Handle);
+             
             foreach(VertexAttribute attrib in attributes)
             {
                 attrib.Buffer.Bind();

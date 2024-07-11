@@ -8,7 +8,7 @@ namespace Opxel.Application
     internal class FlyingCamera : Camera
     {
         public float Speed { get; set; } = 4f;
-        public float MouseSensitivity { get; set; } = 14f;
+        public float MouseSensitivity { get; set; } = 5f;
         public float MinPitch { get; set; } = -MathF.PI / 2f;
         public float MaxPitch { get; set; } = 1;
 
@@ -19,6 +19,8 @@ namespace Opxel.Application
 
         public void Update(float deltaTime)
         {
+            deltaTime = Math.Clamp(deltaTime, 0f, 0.01f);
+
             if(OpxelInput.IsMouseButtonDown(MouseButton.Button1) && OpxelInput.MouseDelta != Vector2.Zero)
             {
                 Rotate(_pitch - OpxelInput.MouseDelta.Y * MouseSensitivity * deltaTime, _yaw + OpxelInput.MouseDelta.X * MouseSensitivity * deltaTime);

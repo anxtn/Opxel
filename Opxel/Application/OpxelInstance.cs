@@ -8,8 +8,6 @@ using Opxel.Mathematics;
 using Opxel.Input;
 using Opxel.Content;
 using Opxel.Voxels;
-using Opxel.Helpers.Extentions;
-using System.Runtime.InteropServices;
 
 //TODO: Cubemap class
 
@@ -19,21 +17,18 @@ namespace Opxel.Application
     {
         private AssetManager assetManager;
         private FlyingCamera camera;
-        private Chunk chunk;
-        private Chunk chunk2;
         private float viewport;
         private OpxelWorld world;
+        private ChunkManager chunkManager;
 
         public OpxelInstance() :
         base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = new Vector2i(1600, 900), StartVisible = false, Title="Opxel"})
         {
-
+            UpdateFrequency = 0;
         }
 
         protected override void OnLoad()
         {
-            int major = OpenGLParameter.MajorVersion;
-            int minor = OpenGLParameter.MinorVersion;
             CenterWindow();
 
             string iconPath = "C:\\Users\\Anton Müller\\Desktop\\Opxel\\Opxel\\Resources\\Icons\\OpxcelIconPNG.png";
@@ -56,7 +51,7 @@ namespace Opxel.Application
 
             viewport = (float)Size.X / Size.Y;
             camera = new FlyingCamera();
-
+            camera.Speed *= 4;
             world = new OpxelWorld(BlockPalette.Default,
                 assetManager.Load<ShaderProgram>("Shaders/ChunkShader.shader.glsl"),
                 assetManager.Load<PixelTexture>("Textures/BlockTextures.png"));
@@ -66,9 +61,7 @@ namespace Opxel.Application
             world.BlockShaderProgram.Use();
             world.BlockShaderProgram.SetUniform("uViewport", viewport);
 
-            
-            chunk = new Chunk(world,new Vector3i(0));
-            chunk2 = new Chunk(world,new Vector3i(Chunk.Size,0,0));
+            chunkManager = new ChunkManager(world);
 
             base.OnLoad();
         }
@@ -82,6 +75,9 @@ namespace Opxel.Application
             Mesh.DefaultShaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
             world.BlockShaderProgram.Use();
             world.BlockShaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
+
+            chunkManager.Update((Vector3i)camera.Position);
+
             base.OnUpdateFrame(frameEventArgs);
         }
 
@@ -91,8 +87,7 @@ namespace Opxel.Application
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            chunk.ChunkMesh.Render();
-            chunk2.ChunkMesh.Render();
+            chunkManager.RenderChunks();
 
             Context.SwapBuffers();
             base.OnRenderFrame(frameEventArgs);

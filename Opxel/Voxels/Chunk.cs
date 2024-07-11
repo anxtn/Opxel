@@ -36,7 +36,7 @@ namespace Opxel.Voxels
             ChunkMesh.GenerateMesh();
         }
 
-        
+
 
         public void GenerateTerrain()
         {
@@ -45,11 +45,12 @@ namespace Opxel.Voxels
             {
                 for(int z = 0;z < Size;z++)
                 {
-                    int height = rnd.Next(10);
-                    for(int y = 0;y < height;y++)
-                    {
+                    for(int y = 0;y < rnd.Next(Size);y++)
+                    if(rnd.Next() % 2 == 0)
                         SetBlock(x, y, z, 1);
-                    }
+                    else
+                        SetBlock(x, y, z, 2);
+
                 }
             }
         }
@@ -60,7 +61,7 @@ namespace Opxel.Voxels
             {
                 throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{x}, y:{y}, z:{z})");
             }
-            if (block != 0 && GetBlock(x, y, z) == 0)
+            if(block != 0 && GetBlock(x, y, z) == 0)
                 NoAirBlockCount++;
             else if(GetBlock(x, y, z) != 0)
                 NoAirBlockCount--;
@@ -91,6 +92,11 @@ namespace Opxel.Voxels
                     (int)(Position.Y - (Position.Y % Size)),
                     (int)(Position.Z - (Position.Z % Size))
                 );
+        }
+
+        public bool IsPositionInside(Vector3i worldPosition)
+        {
+            return (worldPosition.X >= Position.X) && (worldPosition.X < (Position.X + Size)) && (worldPosition.Z >= Position.Z) && (worldPosition.Z < (Position.Z + Size));
         }
 
         public void Dispose()
