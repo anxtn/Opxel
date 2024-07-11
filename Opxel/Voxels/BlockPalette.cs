@@ -22,13 +22,14 @@ namespace Opxel.Voxels
         }
 
         public static BlockPalette Default = new BlockPalette(new[]{
-            //id: 0
-            //Air
+            //id: 0 Air
             new BlockProperty("Air",Vector2i.Zero,Vector2i.Zero,Vector2i.Zero,BlockTags.NoMesh | BlockTags.Transparent),
 
-            //id: 1
-            //Grass
-            new BlockProperty("Grass",topFaceUVTextureStart: new Vector2i(1,0),new Vector2i(2,0),new Vector2i(3,0))
+            //id: 1 Grass
+            new BlockProperty("Grass",new Vector2i(0,0),new Vector2i(1,0),new Vector2i(2,0)),
+
+            //id:2 Stone
+            new BlockProperty("Stone", new Vector2i(3,0),new Vector2i(3,0),new Vector2i(3,0))
         });
     }
 }
