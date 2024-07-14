@@ -7,15 +7,13 @@ layout(location = 2) in vec3 aNormal;
 
 uniform mat4 uModel;
 uniform mat4 uViewProjection;
-uniform float uViewport;
 
 out vec4 vColor;
 out  vec3 vTransformedNormal;
 
 void main()
 {
-    vec4 position = vec4(aPosition.x, aPosition.y, aPosition.z,1)* uModel * uViewProjection ;
-    position.y *= uViewport;
+    vec4 position = vec4(aPosition.x, aPosition.y, aPosition.z,1)* uModel * uViewProjection;
     gl_Position = position;
     vColor = aColor;
     mat3 normalMatrix = transpose(inverse(mat3(uModel)));

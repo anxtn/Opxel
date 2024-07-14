@@ -59,11 +59,6 @@ namespace Opxel.Application
                 assetManager.Load<ShaderProgram>("Shaders/ChunkShader.shader.glsl"),
                 assetManager.Load<PixelTexture>("Textures/BlockTextures.png"));
 
-            Mesh.DefaultShaderProgram.Use();
-            Mesh.DefaultShaderProgram.SetUniform("uViewport", viewport);
-            world.BlockShaderProgram.Use();
-            world.BlockShaderProgram.SetUniform("uViewport", viewport);
-
             chunkManager = new ChunkManager(world);
 
             base.OnLoad();

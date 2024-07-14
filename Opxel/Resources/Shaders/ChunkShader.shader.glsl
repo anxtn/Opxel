@@ -6,7 +6,6 @@ layout(location = 1) in vec2 aUv;
 layout(location = 2) in vec3 aNormal;
 
 uniform mat4 uViewProjection;
-uniform float uViewport;
 uniform vec3 uChunkPosition;
 
 out vec2 vUv;
@@ -15,7 +14,6 @@ out vec3 vNormal;
 void main()
 {
     vec4 position = vec4(aPosition + uChunkPosition,1) * uViewProjection;
-    position.y *= uViewport;
     vUv = aUv;
     vNormal = aNormal;
     gl_Position = position;
