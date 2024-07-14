@@ -16,7 +16,7 @@ namespace Opxel.Voxels
         public readonly List<Chunk> ActiveChunks;
         public readonly Queue<Chunk> DeleteQueue;
         public readonly Queue<Vector3i> LoadQueue;
-        public int chunkLoadDistance = Chunk.Size * 4 + 1;
+        public int chunkLoadDistance = Chunk.Size * 2 + 16;
 
         private bool deleteFlag;
 
@@ -39,14 +39,14 @@ namespace Opxel.Voxels
                 {
                     Vector3i pos = GetPositionOfChunk(new Vector3i(playerPosition.X + dx, 0, playerPosition.Z + dz));
                    
-                    if(Vector3.Distance(pos, playerPosition) <= chunkLoadDistance && !IsChunkLoaded(pos) && !LoadQueue.Contains(pos))
+                    if(Vector2.Distance(pos.Xz, playerPosition.Xz) <= chunkLoadDistance && !IsChunkLoaded(pos) && !LoadQueue.Contains(pos))
                     {
                         LoadQueue.Enqueue(pos);
                     }
                 }
             }
 
-            foreach(Chunk chunk in ActiveChunks.Where((chunk) => Vector3.Distance(chunk.Position, playerPosition) > chunkLoadDistance))
+            foreach(Chunk chunk in ActiveChunks.Where((chunk) => Vector2.Distance(chunk.Position.Xz, playerPosition.Xz) > chunkLoadDistance))
             {
                 if(!DeleteQueue.Contains(chunk))
                 DeleteQueue.Enqueue(chunk);

@@ -32,8 +32,9 @@ namespace Opxel.Voxels
 
         private unsafe VertexArray CreateVertexArray()
         {
-            VertexAttribute posAttrib = new VertexAttribute(VertexBuffer,0,3,typeof(float),sizeof(float),0,5 * sizeof(float));
-            VertexAttribute uvAttrib = new VertexAttribute(VertexBuffer,1,2,typeof(float),sizeof(float),3 * sizeof(float), 5 * sizeof(float));
+            VertexAttribute posAttrib = new VertexAttribute(VertexBuffer,0,3,typeof(float),sizeof(float),0,8 * sizeof(float));
+            VertexAttribute uvAttrib = new VertexAttribute(VertexBuffer,1,2,typeof(float),sizeof(float),3 * sizeof(float), 8 * sizeof(float));
+            VertexAttribute normalAttrib = new VertexAttribute(VertexBuffer,2,3,typeof(float),sizeof(float),5 * sizeof(float), 8 * sizeof(float));
             VertexArray vao = new VertexArray(posAttrib, uvAttrib);
             return vao;
         }
@@ -64,7 +65,7 @@ namespace Opxel.Voxels
         {
             BlockPalette blockPalette = Chunk.World.BlockPalette;
             ChunkMeshBuilder meshBuilder = new ChunkMeshBuilder(blockPalette);
-            ChunkLayer[] layers = Chunk.Layers;
+            ChunkLayer[] layers = Chunk.BlockData.Layers;
             
 
             for(int y = 1;y < Chunk.Size - 1;y++)

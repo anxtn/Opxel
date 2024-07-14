@@ -11,13 +11,13 @@ namespace Opxel.Voxels
     {
         public readonly OpxelWorld World;
         public readonly ChunkMesh ChunkMesh;
-        public readonly ChunkLayer[] Layers;
+        public readonly ChunkBlockData BlockData;
         public readonly Vector3i Position;
-        public int NoAirBlockCount;
+        
 
         public static readonly int Size = 32;
-        public static readonly int LayerSize = 32 * 32;
-        public static readonly int VolumeSize = 32 * 32 * 32;
+        public static readonly int LayerSize = Size * Size;
+        public static readonly int VolumeSize = Size * Size * Size;
 
         private bool disposed;
 
@@ -26,9 +26,7 @@ namespace Opxel.Voxels
             this.World = world;
             this.Position = position;
             ChunkMesh = new ChunkMesh(this);
-            Layers = new ChunkLayer[Size];
-            NoAirBlockCount = 0;
-            for(int i = 0;i < Layers.Length;i++) Layers[i] = new ChunkLayer(this);
+            BlockData = new ChunkBlockData(this);
 
             disposed = false;
 
@@ -45,40 +43,18 @@ namespace Opxel.Voxels
             {
                 for(int z = 0;z < Size;z++)
                 {
-                    for(int y = 0;y < rnd.Next(Size);y++)
-                    if(rnd.Next() % 2 == 0)
-                        SetBlock(x, y, z, 1);
-                    else
-                        SetBlock(x, y, z, 2);
+                    int height = (int)(World.WorldGenerator.GetHeight(Position.X +  x, Position.Z +  z) * 10f);
+                    for(int y = 0;y < height;y++)
+                        if(rnd.Next() % 2 == 0)
+                            BlockData.SetBlock(x, y, z, 1);
+                        else
+                            BlockData.SetBlock(x, y, z, 2);
 
                 }
             }
         }
 
-        public void SetBlock(int x, int y, int z, int block)
-        {
-            if(!IsInside(x, y, z))
-            {
-                throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{x}, y:{y}, z:{z})");
-            }
-            if(block != 0 && GetBlock(x, y, z) == 0)
-                NoAirBlockCount++;
-            else if(GetBlock(x, y, z) != 0)
-                NoAirBlockCount--;
-
-            Layers[y].SetBlock(x, z, block);
-        }
-
-        public int GetBlock(int x, int y, int z)
-        {
-#if DEBUG
-            if(!IsInside(x, y, z))
-            {
-                throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{x}, y:{y}, z:{z})");
-            }
-#endif
-            return Layers[y].GetBlock(x, z);
-        }
+       
 
         public bool IsInside(int x, int y, int z)
         {
