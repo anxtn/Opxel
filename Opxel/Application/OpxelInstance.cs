@@ -21,10 +21,13 @@ namespace Opxel.Application
         private OpxelWorld world;
         private ChunkManager chunkManager;
 
+        private static Vector2i resolution = new Vector2i(1920,1080);
+
         public OpxelInstance() :
-        base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = new Vector2i(1600, 900), StartVisible = false, Title="Opxel"})
+        base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = resolution, StartVisible = false, Title = "Opxel" })
         {
             UpdateFrequency = 0;
+            WindowState = WindowState.Fullscreen;
         }
 
         protected override void OnLoad()
@@ -34,7 +37,7 @@ namespace Opxel.Application
             string iconPath = "C:\\Users\\Anton Müller\\Desktop\\Opxel\\Opxel\\Resources\\Icons\\OpxcelIconPNG.png";
             Icon = ImageLoader.CreateWindowIcon(iconPath);
 
-            IsVisible = true;   
+            IsVisible = true;
 
             assetManager = new AssetManager();
             assetManager.PreLoadAll();
@@ -70,6 +73,10 @@ namespace Opxel.Application
             float deltaTime = (float)frameEventArgs.Time;
 
             OpxelInput.Update(KeyboardState, MouseState);
+
+            if(OpxelInput.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
+                Close();
+
             camera.Update(deltaTime);
             Mesh.DefaultShaderProgram.Use();
             Mesh.DefaultShaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);

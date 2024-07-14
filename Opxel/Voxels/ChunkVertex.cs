@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 // 1.5 ubyte sunLight (4 Bit R, 4 Bit G, 4 Bit B)
 // 1.5 ubyte environmentLight (4 Bit R, 4 Bit G, 4 Bit B) 
 //pack last 2 values to shot or smth
+//(packing not yet implemented)
 
 namespace Opxel.Voxels
 {
@@ -28,6 +29,10 @@ namespace Opxel.Voxels
 
         public float S;
         public float T;
+
+        public float NormalX;
+        public float NormalY;
+        public float NormalZ;
 
         public ChunkVertex(float x, float y, float z)
         {
@@ -46,11 +51,47 @@ namespace Opxel.Voxels
             this.T = integerUv.Y / 16f;
         }
 
-        public ChunkVertex(Vector3i integerPosition)
+        public ChunkVertex(Vector3i integerPosition, Vector2i integerUv, FaceDirection normalDirection)
         {
             this.X = integerPosition.X;
             this.Y = integerPosition.Y;
             this.Z = integerPosition.Z;
+
+            this.S = integerUv.X / 16f;
+            this.T = integerUv.Y / 16f;
+
+            switch(normalDirection) {
+                case FaceDirection.XPositive:
+                    NormalX = 1;
+                    NormalY = 0;
+                    NormalZ = 0;
+                    break;
+                case FaceDirection.XNegative:
+                    NormalX = -1;
+                    NormalY = 0;
+                    NormalZ = 0;
+                    break;
+                case FaceDirection.YPositive:
+                    NormalX = 0;
+                    NormalY = 1;
+                    NormalZ = 0;
+                    break;
+                case FaceDirection.YNegative:
+                    NormalX = 0;
+                    NormalY = -1;
+                    NormalZ = 0;
+                    break;
+                case FaceDirection.ZPositive:
+                    NormalX = 0;
+                    NormalY = 0;
+                    NormalZ = 1;
+                    break;
+                case FaceDirection.ZNegative:
+                    NormalX = 0;
+                    NormalY = 0;
+                    NormalZ = -1;
+                    break;
+            }
         }
     }
 }

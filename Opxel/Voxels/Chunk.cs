@@ -13,7 +13,7 @@ namespace Opxel.Voxels
         public readonly ChunkMesh ChunkMesh;
         public readonly ChunkBlockData BlockData;
         public readonly Vector3i Position;
-        
+
 
         public static readonly int Size = 32;
         public static readonly int LayerSize = Size * Size;
@@ -43,18 +43,16 @@ namespace Opxel.Voxels
             {
                 for(int z = 0;z < Size;z++)
                 {
-                    int height = (int)(World.WorldGenerator.GetHeight(Position.X +  x, Position.Z +  z) * 10f);
+                    int height = (int)(World.WorldGenerator.GetHeight(Position.X + x, Position.Z + z) * 10f);
                     for(int y = 0;y < height;y++)
-                        if(rnd.Next() % 2 == 0)
-                            BlockData.SetBlock(x, y, z, 1);
-                        else
-                            BlockData.SetBlock(x, y, z, 2);
+                        BlockData.SetBlock(x, y, z, 1);
+
 
                 }
             }
         }
 
-       
+
 
         public bool IsInside(int x, int y, int z)
         {

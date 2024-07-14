@@ -1,4 +1,5 @@
-﻿using Opxel.Graphics;
+﻿using Opxel.Generation;
+using Opxel.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +13,14 @@ namespace Opxel.Voxels
         public readonly BlockPalette BlockPalette;
         public readonly ShaderProgram BlockShaderProgram;
         public readonly PixelTexture BlockTexture;
+        public readonly WorldGenerator WorldGenerator;
 
         public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, PixelTexture blockTexture)
         {
             this.BlockPalette = blockPalette;
             this.BlockShaderProgram = blockShaderProgram;
             this.BlockTexture = blockTexture;
+            this.WorldGenerator = new WorldGenerator();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Opxel.Voxels
             VertexAttribute posAttrib = new VertexAttribute(VertexBuffer,0,3,typeof(float),sizeof(float),0,8 * sizeof(float));
             VertexAttribute uvAttrib = new VertexAttribute(VertexBuffer,1,2,typeof(float),sizeof(float),3 * sizeof(float), 8 * sizeof(float));
             VertexAttribute normalAttrib = new VertexAttribute(VertexBuffer,2,3,typeof(float),sizeof(float),5 * sizeof(float), 8 * sizeof(float));
-            VertexArray vao = new VertexArray(posAttrib, uvAttrib);
+            VertexArray vao = new VertexArray(posAttrib, uvAttrib, normalAttrib);
             return vao;
         }
 
@@ -133,8 +133,6 @@ namespace Opxel.Voxels
                     }
                 }
             }
-
-            //Edges
 
             this.SetVertices(meshBuilder.VerticesList.ToArray());
             this.SetIndices(meshBuilder.IndicesList.ToArray());

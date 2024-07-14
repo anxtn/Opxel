@@ -19,7 +19,6 @@ namespace Opxel.Application
 
         public void Update(float deltaTime)
         {
-            deltaTime = Math.Clamp(deltaTime, 0f, 0.01f);
 
             if(OpxelInput.IsMouseButtonDown(MouseButton.Button1) && OpxelInput.MouseDelta != Vector2.Zero)
             {

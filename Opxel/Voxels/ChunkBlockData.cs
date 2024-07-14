@@ -9,9 +9,10 @@ namespace Opxel.Voxels
 {
     internal class ChunkBlockData
     {
+        public readonly Chunk Chunk;
         public readonly ChunkLayer[] Layers;
         public int NoAirBlockCount { get; private set; }
-        public readonly Chunk Chunk;
+        
         public ChunkBlockData(Chunk chunk)
         {
             this.Chunk = chunk;
@@ -22,10 +23,12 @@ namespace Opxel.Voxels
         }
         public void SetBlock(int x, int y, int z, int block)
         {
+#if CHECK_BLOCK_POSITION
             if(!Chunk.IsInside(x, y, z))
             {
                 throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{x}, y:{y}, z:{z})");
             }
+#endif
             if(block != 0 && GetBlock(x, y, z) == 0)
                 NoAirBlockCount++;
             else if(GetBlock(x, y, z) != 0)
@@ -36,7 +39,7 @@ namespace Opxel.Voxels
 
         public int GetBlock(int x, int y, int z)
         {
-#if DEBUG
+#if CHECK_BLOCK_POSITION
             if(!Chunk.IsInside(x, y, z))
             {
                 throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{x}, y:{y}, z:{z})");
