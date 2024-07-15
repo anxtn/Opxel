@@ -16,7 +16,7 @@ namespace Opxel.Voxels
         public readonly List<Chunk> ActiveChunks;
         public readonly Queue<Chunk> DeleteQueue;
         public readonly Queue<Vector3i> LoadQueue;
-        public int chunkLoadDistance = Chunk.Size * 3 + 16;
+        public int chunkLoadDistance = Chunk.SizeX * 3 + 16;
 
         private bool deleteFlag;
 
@@ -33,9 +33,9 @@ namespace Opxel.Voxels
         {
             List<Chunk> standingChunks = new List<Chunk>();
 
-            for(int dx = -chunkLoadDistance;dx <= chunkLoadDistance;dx += Chunk.Size)
+            for(int dx = -chunkLoadDistance;dx <= chunkLoadDistance;dx += Chunk.SizeX)
             {
-                for(int dz = -chunkLoadDistance;dz <= chunkLoadDistance;dz += Chunk.Size)
+                for(int dz = -chunkLoadDistance;dz <= chunkLoadDistance;dz += Chunk.SizeZ)
                 {
                     Vector3i pos = GetPositionOfChunk(new Vector3i(playerPosition.X + dx, 0, playerPosition.Z + dz));
                    
@@ -69,9 +69,9 @@ namespace Opxel.Voxels
 
         public Vector3i GetPositionOfChunk(Vector3i worldPosition)
         {
-            return new Vector3i((int)(worldPosition.X - (worldPosition.X % Chunk.Size)),
-                    (int)(worldPosition.Y - (worldPosition.Y % Chunk.Size)),
-                    (int)(worldPosition.Z - (worldPosition.Z % Chunk.Size)));
+            return new Vector3i((int)(worldPosition.X - (worldPosition.X % Chunk.SizeX)),
+                    (int)(worldPosition.Y - (worldPosition.Y % Chunk.SizeY)),
+                    (int)(worldPosition.Z - (worldPosition.Z % Chunk.SizeZ)));
         }
 
         public bool IsChunkLoaded(Vector3i worldPosition)

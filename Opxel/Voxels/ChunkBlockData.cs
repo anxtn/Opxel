@@ -17,7 +17,7 @@ namespace Opxel.Voxels
         {
             this.Chunk = chunk;
             NoAirBlockCount = 0;
-            Layers = new ChunkLayer[Chunk.Size];
+            Layers = new ChunkLayer[Chunk.SizeY];
             for(int i = 0;i < Layers.Length;i++) Layers[i] = new ChunkLayer(chunk);
 
         }

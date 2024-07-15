@@ -68,7 +68,7 @@ namespace Opxel.Voxels
             ChunkLayer[] layers = Chunk.BlockData.Layers;
 
 
-            for(int y = 1;y < Chunk.Size - 1;y++)
+            for(int y = 1;y < Chunk.SizeY - 1;y++)
             {
                 if(layers[y].IsEmpty) continue;
 
@@ -76,9 +76,9 @@ namespace Opxel.Voxels
                 ChunkLayer topLayer = layers[y + 1];
                 ChunkLayer buttomLayer = layers[y - 1];
 
-                for(int x = 0;x < Chunk.Size;x++)
+                for(int x = 0;x < Chunk.SizeX;x++)
                 {
-                    for(int z = 0;z < Chunk.Size;z++)
+                    for(int z = 0;z < Chunk.SizeZ;z++)
                     {
                         int block = layer[x, z];
 
@@ -89,7 +89,7 @@ namespace Opxel.Voxels
                         int neighbourBlock;
 
                         //XPositive
-                        if(x != Chunk.Size - 1)
+                        if(x != Chunk.SizeX - 1)
                         {
                             neighbourBlock = layer[x + 1, z];
                             if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
@@ -125,7 +125,7 @@ namespace Opxel.Voxels
                         }
 
                         //ZPositive
-                        if(z != Chunk.Size - 1)
+                        if(z != Chunk.SizeZ - 1)
                         {
                             neighbourBlock = layer[x, z + 1];
                             if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))

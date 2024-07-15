@@ -31,7 +31,7 @@ namespace Opxel.Voxels
 
             //index = z*width+x
 
-            Blocks[z * Chunk.Size + x] = block;
+            Blocks[z * Chunk.SizeX + x] = block;
         }
 
 
@@ -42,7 +42,7 @@ namespace Opxel.Voxels
             {
                 return 0; // 0 = Air
             }
-            return Blocks[z * Chunk.Size + x];
+            return Blocks[z * Chunk.SizeX + x];
         }
 
         public int this[int x, int z] => GetBlock(x, z);
