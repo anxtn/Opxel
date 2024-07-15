@@ -14,13 +14,15 @@ namespace Opxel.Voxels
         public readonly ShaderProgram BlockShaderProgram;
         public readonly PixelTexture BlockTexture;
         public readonly WorldGenerator WorldGenerator;
+        public readonly Camera Camera;
 
-        public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, PixelTexture blockTexture)
+        public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, PixelTexture blockTexture, Camera camera)
         {
             this.BlockPalette = blockPalette;
             this.BlockShaderProgram = blockShaderProgram;
             this.BlockTexture = blockTexture;
             this.WorldGenerator = new WorldGenerator();
+            this.Camera = camera;
         }
     }
 }

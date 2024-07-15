@@ -9,14 +9,16 @@ namespace Opxel.Voxels
 {
     internal class ChunkLayer
     {
-        public bool IsEmpty;
+        public bool IsEmpty {  get;private set; }
         public int[]? Blocks;
         public readonly Chunk Chunk;
+        public readonly int YPosition;
 
-        public ChunkLayer(Chunk chunk)
+        public ChunkLayer(Chunk chunk, int yPosition)
         {
             IsEmpty = true;
             this.Chunk = chunk; 
+            this.YPosition = yPosition;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -28,8 +30,6 @@ namespace Opxel.Voxels
                 Blocks = new int[Chunk.LayerSize];
                 IsEmpty = false;
             }
-
-            //index = z*width+x
 
             Blocks[z * Chunk.SizeX + x] = block;
         }

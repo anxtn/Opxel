@@ -59,7 +59,7 @@ namespace Opxel.Application
             camera.Speed *= 4;
             world = new OpxelWorld(BlockPalette.Default,
                 assetManager.Load<ShaderProgram>("Shaders/ChunkShader.shader.glsl"),
-                assetManager.Load<PixelTexture>("Textures/BlockTextures.png"));
+                assetManager.Load<PixelTexture>("Textures/BlockTextures.png"), camera);
 
             int h = world.BlockTexture.Handle;
 
@@ -97,6 +97,13 @@ namespace Opxel.Application
 
             Context.SwapBuffers();
             base.OnRenderFrame(frameEventArgs);
+        }
+
+        protected override void OnResize(ResizeEventArgs e)
+        {
+            if(camera != null)
+                camera.AspectRation = e.Width / (float)e.Height;
+            base.OnResize(e);   
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using System.Collections.Immutable;
 using System.Runtime.InteropServices;
 
 namespace Opxel.Graphics
@@ -32,14 +33,6 @@ namespace Opxel.Graphics
             ByteLength = Length * Marshal.SizeOf<T>();
             Bind();
             GL.BufferData(Target, ByteLength, data, Usage);
-        }
-
-        public void SetData<T>(Span<T> data) where T : unmanaged
-        {
-            Length = data.Length;
-            ByteLength = Length * Marshal.SizeOf<T>();
-            Bind();
-            GL.BufferData<T>(Target, Length,data.ToArray(), Usage);
         }
 
         public T[] ReadData<T>() where T : unmanaged

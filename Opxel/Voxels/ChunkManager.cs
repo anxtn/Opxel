@@ -16,7 +16,7 @@ namespace Opxel.Voxels
         public readonly List<Chunk> ActiveChunks;
         public readonly Queue<Chunk> DeleteQueue;
         public readonly Queue<Vector3i> LoadQueue;
-        public int chunkLoadDistance = Chunk.SizeX * 3 + 16;
+        public int chunkLoadDistance { get;set; } = Chunk.SizeX * 8 + 8;
 
         private bool deleteFlag;
 
@@ -29,6 +29,7 @@ namespace Opxel.Voxels
             deleteFlag = false;
         }
 
+        // per update only one chunk is loaded or deleted 
         public void Update(Vector3i playerPosition)
         {
             List<Chunk> standingChunks = new List<Chunk>();

@@ -30,7 +30,7 @@ namespace Opxel.Graphics
             set
             {
                 _fov = value;
-                ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, 0.01f, 200f);
+                ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, 0.01f, 300f);
                 UpdateMatrices();
             }
         }
@@ -41,7 +41,7 @@ namespace Opxel.Graphics
             set
             {
                 _aspectRatio = value;
-                ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, 0.01f, 100f);
+                ProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(_fov, _aspectRatio, 0.01f, 300f);
                 UpdateMatrices();
             }
         }

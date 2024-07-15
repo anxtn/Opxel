@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace Opxel.Voxels
             this.Chunk = chunk;
             NoAirBlockCount = 0;
             Layers = new ChunkLayer[Chunk.SizeY];
-            for(int i = 0;i < Layers.Length;i++) Layers[i] = new ChunkLayer(chunk);
+            for(int i = 0;i < Layers.Length;i++) Layers[i] = new ChunkLayer(chunk,i);
 
         }
         public void SetBlock(int x, int y, int z, int block)

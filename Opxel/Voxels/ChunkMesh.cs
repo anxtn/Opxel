@@ -4,6 +4,8 @@ using Opxel.Content;
 using Opxel.Graphics;
 using Opxel.Debug;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace Opxel.Voxels
 {
@@ -19,16 +21,6 @@ namespace Opxel.Voxels
 
 
         private bool disposed;
-
-        public void SetVertices(ChunkVertex[] vertices)
-        {
-            VertexBuffer.SetData(vertices);
-        }
-
-        public void SetIndices(uint[] indices)
-        {
-            IndexBuffer.SetData(indices);
-        }
 
         private unsafe VertexArray CreateVertexArray()
         {
@@ -58,6 +50,7 @@ namespace Opxel.Voxels
             Chunk.World.BlockShaderProgram.Use();
             ChunkBlockShaderProgram.SetUniform("uChunkPosition", Chunk.Position);
             ChunkBlockShaderProgram.SetUniform("uTexture", 0);
+            ChunkBlockShaderProgram.SetUniform("uCameraPosition", Chunk.World.Camera.Position);
             GL.DrawElements(PrimitiveType.Triangles, IndexBuffer.Length, DrawElementsType.UnsignedInt, 0);
         }
 
@@ -89,7 +82,7 @@ namespace Opxel.Voxels
                         int neighbourBlock;
 
                         //XPositive
-                        if(x != Chunk.SizeX - 1)
+                        if(x < Chunk.SizeX - 1)
                         {
                             neighbourBlock = layer[x + 1, z];
                             if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
@@ -99,8 +92,8 @@ namespace Opxel.Voxels
                         }
 
                         //XNegative
-                        if(x != 0)
-                        {
+                        if(x > 0)
+                        { 
                             neighbourBlock = layer[x - 1, z];
                             if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                             {
@@ -135,7 +128,7 @@ namespace Opxel.Voxels
                         }
 
                         //ZNegative
-                        if(z != 0)
+                        if(z > 0)
                         {
                             neighbourBlock = layer[x, z - 1];
                             if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
@@ -147,8 +140,9 @@ namespace Opxel.Voxels
                 }
             }
 
-            this.SetVertices(meshBuilder.VerticesList.ToArray());
-            this.SetIndices(meshBuilder.IndicesList.ToArray());
+            // 122 mcs
+            VertexBuffer.SetData(meshBuilder.VerticesList.ToArray());
+            IndexBuffer.SetData(meshBuilder.IndicesList.ToArray());
         }
 
         public void Dispose()

@@ -13,7 +13,7 @@ namespace Opxel.Voxels
         public readonly OpxelWorld World;
         public readonly ChunkMesh ChunkMesh;
         public readonly ChunkBlockData BlockData;
-        public readonly Vector3i Position;
+        public readonly Vector3i Position; // Y is always 0
 
         public static readonly int SizeX = 16;
         public static readonly int SizeY = 256;
@@ -37,8 +37,6 @@ namespace Opxel.Voxels
             ChunkMesh.GenerateMesh();
         }
 
-
-
         public void GenerateTerrain()
         {
             Random rnd = new Random();
@@ -52,8 +50,6 @@ namespace Opxel.Voxels
                 }
             }
         }
-
-
 
         public bool IsInside(int x, int y, int z)
         {
