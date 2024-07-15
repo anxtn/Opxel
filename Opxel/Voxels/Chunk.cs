@@ -1,6 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,11 +44,9 @@ namespace Opxel.Voxels
             {
                 for(int z = 0;z < Size;z++)
                 {
-                    int height = (int)(World.WorldGenerator.GetHeight(Position.X + x, Position.Z + z) * 10f);
+                    int height = (int)( MathF.Abs(World.WorldGenerator.GetHeight(Position.X + x, Position.Z + z) * 10f))+2;
                     for(int y = 0;y < height;y++)
-                        BlockData.SetBlock(x, y, z, 1);
-
-
+                        BlockData.SetBlock(x, y, z, rnd.Next() % 2 == 0 ?  1 : 2);
                 }
             }
         }

@@ -9,7 +9,10 @@ using Opxel.Input;
 using Opxel.Content;
 using Opxel.Voxels;
 
-//TODO: Cubemap class
+//TODO:
+//      Profiler for better performence (in vs)
+//      CubeMap class
+//      FrameBuffer class
 
 namespace Opxel.Application
 {
@@ -21,13 +24,12 @@ namespace Opxel.Application
         private OpxelWorld world;
         private ChunkManager chunkManager;
 
-        private static Vector2i resolution = new Vector2i(1920,1080);
+        private static Vector2i resolution = new Vector2i(1920 ,1080 );
 
         public OpxelInstance() :
         base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = resolution, StartVisible = false, Title = "Opxel" })
         {
-            UpdateFrequency = 0;
-            WindowState = WindowState.Fullscreen;
+            WindowState = WindowState.Maximized;
         }
 
         protected override void OnLoad()
@@ -58,6 +60,8 @@ namespace Opxel.Application
             world = new OpxelWorld(BlockPalette.Default,
                 assetManager.Load<ShaderProgram>("Shaders/ChunkShader.shader.glsl"),
                 assetManager.Load<PixelTexture>("Textures/BlockTextures.png"));
+
+            int h = world.BlockTexture.Handle;
 
             chunkManager = new ChunkManager(world);
 

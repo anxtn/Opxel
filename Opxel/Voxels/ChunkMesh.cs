@@ -16,7 +16,7 @@ namespace Opxel.Voxels
         private VertexArray VertexArray;
         private GraphicBuffer VertexBuffer;
         private GraphicBuffer IndexBuffer;
-        
+
 
         private bool disposed;
 
@@ -32,9 +32,9 @@ namespace Opxel.Voxels
 
         private unsafe VertexArray CreateVertexArray()
         {
-            VertexAttribute posAttrib = new VertexAttribute(VertexBuffer,0,3,typeof(float),sizeof(float),0,8 * sizeof(float));
-            VertexAttribute uvAttrib = new VertexAttribute(VertexBuffer,1,2,typeof(float),sizeof(float),3 * sizeof(float), 8 * sizeof(float));
-            VertexAttribute normalAttrib = new VertexAttribute(VertexBuffer,2,3,typeof(float),sizeof(float),5 * sizeof(float), 8 * sizeof(float));
+            VertexAttribute posAttrib = new VertexAttribute(VertexBuffer, 0, 3, typeof(float), sizeof(float), 0, 8 * sizeof(float));
+            VertexAttribute uvAttrib = new VertexAttribute(VertexBuffer, 1, 2, typeof(float), sizeof(float), 3 * sizeof(float), 8 * sizeof(float));
+            VertexAttribute normalAttrib = new VertexAttribute(VertexBuffer, 2, 3, typeof(float), sizeof(float), 5 * sizeof(float), 8 * sizeof(float));
             VertexArray vao = new VertexArray(posAttrib, uvAttrib, normalAttrib);
             return vao;
         }
@@ -66,7 +66,7 @@ namespace Opxel.Voxels
             BlockPalette blockPalette = Chunk.World.BlockPalette;
             ChunkMeshBuilder meshBuilder = new ChunkMeshBuilder(blockPalette);
             ChunkLayer[] layers = Chunk.BlockData.Layers;
-            
+
 
             for(int y = 1;y < Chunk.Size - 1;y++)
             {
@@ -76,9 +76,9 @@ namespace Opxel.Voxels
                 ChunkLayer topLayer = layers[y + 1];
                 ChunkLayer buttomLayer = layers[y - 1];
 
-                for(int x = 1;x < Chunk.Size - 1;x++)
+                for(int x = 0;x < Chunk.Size;x++)
                 {
-                    for(int z = 1;z < Chunk.Size - 1;z++)
+                    for(int z = 0;z < Chunk.Size;z++)
                     {
                         int block = layer[x, z];
 
@@ -89,17 +89,23 @@ namespace Opxel.Voxels
                         int neighbourBlock;
 
                         //XPositive
-                        neighbourBlock = layer[x + 1, z];
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(x != Chunk.Size - 1)
                         {
-                            meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XPositive, block);
+                            neighbourBlock = layer[x + 1, z];
+                            if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                            {
+                                meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XPositive, block);
+                            }
                         }
 
                         //XNegative
-                        neighbourBlock = layer[x - 1, z];
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(x != 0)
                         {
-                            meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XNegative, block);
+                            neighbourBlock = layer[x - 1, z];
+                            if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                            {
+                                meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XNegative, block);
+                            }
                         }
 
 
@@ -110,6 +116,7 @@ namespace Opxel.Voxels
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.YPositive, block);
                         }
 
+
                         //YNegative
                         neighbourBlock = buttomLayer[x, z];
                         if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
@@ -118,17 +125,23 @@ namespace Opxel.Voxels
                         }
 
                         //ZPositive
-                        neighbourBlock = layer[x, z + 1];
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(z != Chunk.Size - 1)
                         {
-                            meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZPositive, block);
+                            neighbourBlock = layer[x, z + 1];
+                            if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                            {
+                                meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZPositive, block);
+                            }
                         }
 
                         //ZNegative
-                        neighbourBlock = layer[x, z - 1];
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(z != 0)
                         {
-                            meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZNegative, block);
+                            neighbourBlock = layer[x, z - 1];
+                            if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                            {
+                                meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZNegative, block);
+                            }
                         }
                     }
                 }
