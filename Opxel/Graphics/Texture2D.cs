@@ -25,8 +25,9 @@ namespace Opxel.Graphics
             this.Handle = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, this.Handle);
             GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             GL.TextureParameter(Handle, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TextureParameter(Handle, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TextureParameter(Handle, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapNearest);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             disposed = false;
         }

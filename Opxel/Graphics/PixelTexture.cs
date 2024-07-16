@@ -9,7 +9,7 @@ namespace Opxel.Graphics
         public PixelTexture(int width, int height, byte[] data) : base(width, height, data)
         {
             this.MagFilter = TextureMagFilter.Nearest;
-            this.MinFilter = TextureMinFilter.Nearest;
+            this.MinFilter = TextureMinFilter.NearestMipmapNearest;
         }
 
         public static new IAssetLoadable Load(string path)
