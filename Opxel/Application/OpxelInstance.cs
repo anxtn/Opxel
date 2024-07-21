@@ -19,21 +19,19 @@ namespace Opxel.Application
     internal class OpxelInstance : GameWindow
     {
         private AssetManager assetManager;
-        private FlyingCamera camera;
-        private float viewport;
         private OpxelWorld world;
-        private ChunkManager chunkManager;
 
         private static Vector2i resolution = new Vector2i(1920 ,1080 );
 
         public OpxelInstance() :
-        base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = resolution, StartVisible = false, Title = "Opxel" })
+        base(GameWindowSettings.Default, new NativeWindowSettings() {ClientSize = resolution, StartVisible = false, Title = "Opxel" })
         {
-            WindowState = WindowState.Maximized;
+            WindowState = WindowState.Fullscreen;
         }
 
         protected override void OnLoad()
         {
+            
             CenterWindow();
 
             string iconPath = "C:\\Users\\Anton Müller\\Desktop\\Opxel\\Opxel\\Resources\\Icons\\OpxcelIconPNG.png";
@@ -53,17 +51,14 @@ namespace Opxel.Application
 #if DEBUG
             Debugger.SetupOpenGLDebugging();
 #endif
-
-            viewport = (float)Size.X / Size.Y;
-            camera = new FlyingCamera();
-            camera.Speed *= 4;
             world = new OpxelWorld(BlockPalette.Default,
-                assetManager.Load<ShaderProgram>("Shaders/ChunkShader.shader.glsl"),
-                assetManager.Load<PixelTexture>("Textures/BlockTextures.png"), camera);
+               assetManager.Load<ShaderProgram>("Shaders/ChunkShader.shader.glsl"),
+               assetManager.Load<PixelTexture>("Textures/BlockTextures.png"));
+            world.Player.Speed *= 4;
 
             int h = world.BlockTexture.Handle;
 
-            chunkManager = new ChunkManager(world);
+            world.Player.Transform.Position = new Vector3(0, 20, 0);
 
             base.OnLoad();
         }
@@ -76,13 +71,12 @@ namespace Opxel.Application
             if(OpxelInput.IsKeyDown(OpenTK.Windowing.GraphicsLibraryFramework.Keys.Escape))
                 Close();
 
-            camera.Update(deltaTime);
+            world.Player.Update(deltaTime);
             Mesh.DefaultShaderProgram.Use();
-            Mesh.DefaultShaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
+            Mesh.DefaultShaderProgram.SetUniform("uViewProjection", world.Player.Camera.ViewProjectionMatrix, true);
             world.BlockShaderProgram.Use();
-            world.BlockShaderProgram.SetUniform("uViewProjection", camera.ViewProjectionMatrix, true);
-
-            chunkManager.Update((Vector3i)camera.Position);
+            world.BlockShaderProgram.SetUniform("uViewProjection", world.Player.Camera.ViewProjectionMatrix, true);
+            world.ChunkManager.Update();
 
             base.OnUpdateFrame(frameEventArgs);
         }
@@ -93,7 +87,7 @@ namespace Opxel.Application
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            chunkManager.RenderChunks();
+            world.ChunkManager.RenderChunks();
 
             Context.SwapBuffers();
             base.OnRenderFrame(frameEventArgs);
@@ -101,8 +95,8 @@ namespace Opxel.Application
 
         protected override void OnResize(ResizeEventArgs e)
         {
-            if(camera != null)
-                camera.AspectRation = e.Width / (float)e.Height;
+            if(world != null)
+                world.Player.Camera.AspectRation = e.Width / (float)e.Height;
             base.OnResize(e);   
         }
     }

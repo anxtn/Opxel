@@ -1,5 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using Opxel.Helpers.Extentions;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,6 +11,7 @@ namespace Opxel.Debug
         public static ConsoleColor DefaultColor = ConsoleColor.White;
         public static ConsoleColor ErrorColor = ConsoleColor.Red;
         public static ConsoleColor WarningColor = ConsoleColor.Yellow;
+        public static ConsoleColor BenchmarkColor = ConsoleColor.Magenta;
 
         //Idk aber vielleicht könnte es unter bestimmten Bedingungen Probleme mit dem GC geben wegen dem DebugProc
         public static void SetupOpenGLDebugging()
@@ -57,6 +59,11 @@ namespace Opxel.Debug
             LogColor(message, WarningColor);
         }
 
+        public static void LogBenchmark(object message)
+        {
+            LogColor(message, BenchmarkColor);
+        }
+
         public static void CheckGLError([CallerLineNumber] int lineNumber = 0, [CallerMemberName] string callerMember = "", [CallerFilePath] string filePath = "")
         {
             ErrorCode error = GL.GetError();
@@ -69,5 +76,13 @@ namespace Opxel.Debug
             }
         }
 
+        public static void TimeBenchmark(Action action,[CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+        {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            action.Invoke();
+            stopwatch.Stop();
+            string fileName = Path.GetFileName(callerFilePath);
+           LogBenchmark($"Benchmark ({fileName}, l. {callerLineNumber}): Elapsed time = {stopwatch.ElapsedMilliseconds} ms"); 
+        }
     }
 }

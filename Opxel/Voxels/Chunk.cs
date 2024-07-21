@@ -15,14 +15,15 @@ namespace Opxel.Voxels
         public readonly ChunkBlockData BlockData;
         public readonly Vector3i Position; // Y is always 0
 
-        public static readonly int SizeX = 16;
-        public static readonly int SizeY = 256;
-        public static readonly int SizeZ = 16;
+        private bool disposed;
 
+        public static readonly int SizeX = 16;
+        public static readonly int SizeY = 128;
+        public static readonly int SizeZ = 16;
         public static readonly int LayerSize = SizeX * SizeZ;
         public static readonly int VolumeSize = SizeX * SizeY * SizeZ;
 
-        private bool disposed;
+        
 
         public Chunk(OpxelWorld world, Vector3i position)
         {

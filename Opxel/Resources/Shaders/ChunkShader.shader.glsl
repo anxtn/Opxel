@@ -35,9 +35,10 @@ uniform sampler2D uTexture;
 
 out vec4 fColor;
 
-const vec3 lightDirection = vec3(1f,-1f,0f);
-const vec4 fadeColor = vec4(100f / 255f, 149f / 255f, 237f / 255f, 1f);
-const float renderDistance = 128f;
+const vec3 lightDirection = vec3(1f,-1f,0.5f);
+//const vec4 fadeColor = vec4(100f / 255f, 149f / 255f, 237f / 255f, 1f); //Cornflowerblue
+const vec4 fadeColor = vec4(1f,1f,1f, 1f);
+const float renderDistance = 155f;
 
 float calcFadeValue(float dist)
 {
@@ -50,7 +51,7 @@ float calcFadeValue(float dist)
 void main()
 {
     float fadeValue = calcFadeValue(vCameraDistance);
-    float diff = clamp(1- dot(vNormal, lightDirection),0.5f,1f);
+    float diff = clamp(1-dot(vNormal, lightDirection),0.3f,1f);
     vec4 textureColor = texture2D(uTexture,vUv);
     fColor = mix(textureColor * diff, fadeColor, fadeValue);
 }

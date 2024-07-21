@@ -1,4 +1,5 @@
-﻿using Opxel.Generation;
+﻿using Opxel.Application;
+using Opxel.Generation;
 using Opxel.Graphics;
 using System;
 using System.Collections.Generic;
@@ -14,15 +15,18 @@ namespace Opxel.Voxels
         public readonly ShaderProgram BlockShaderProgram;
         public readonly PixelTexture BlockTexture;
         public readonly WorldGenerator WorldGenerator;
-        public readonly Camera Camera;
+        public readonly ChunkManager ChunkManager;
+        public readonly OpxelPlayer Player;
 
-        public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, PixelTexture blockTexture, Camera camera)
+        public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, PixelTexture blockTexture)
         {
             this.BlockPalette = blockPalette;
             this.BlockShaderProgram = blockShaderProgram;
             this.BlockTexture = blockTexture;
-            this.WorldGenerator = new WorldGenerator();
-            this.Camera = camera;
+
+            WorldGenerator = new WorldGenerator();
+            ChunkManager = new ChunkManager(this);
+            Player = new OpxelPlayer();
         }
     }
 }
