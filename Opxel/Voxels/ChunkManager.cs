@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using Opxel.Debug;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -16,10 +17,8 @@ namespace Opxel.Voxels
         public readonly Dictionary<Vector3i, Chunk> ActiveChunks;
         public readonly Queue<Chunk> DeleteQueue;
         public readonly Queue<Vector3i> LoadQueue;
-        public int chunkLoadDistance { get; set; } = Chunk.SizeX * 7 + 8;
+        public readonly int ChunkLoadDistance = Chunk.SizeX * 16 + 8;
         private Vector3i[] ChunkLoadOffsets;
-
-        private bool deleteFlag;
 
         public ChunkManager(OpxelWorld world)
         {
@@ -27,8 +26,7 @@ namespace Opxel.Voxels
             ActiveChunks = new Dictionary<Vector3i, Chunk>();
             DeleteQueue = new Queue<Chunk>();
             LoadQueue = new Queue<Vector3i>();
-            deleteFlag = false;
-            ChunkLoadOffsets = CalcChunkLoadOffsets(chunkLoadDistance);
+            ChunkLoadOffsets = CalcChunkLoadOffsets(ChunkLoadDistance);
         }
 
         private static Vector3i[] CalcChunkLoadOffsets(int radius)
@@ -38,9 +36,9 @@ namespace Opxel.Voxels
             {
                 for(int dz = -radius;dz <= radius;dz += Chunk.SizeZ)
                 {
-                    if(Vector2.Distance(Vector2.Zero, new Vector2(dx,dz)) <= radius)
+                    if(Vector2.Distance(Vector2.Zero, new Vector2(dx, dz)) <= radius)
                     {
-                        offsets.Add(new Vector3i(dx,0,dz));
+                        offsets.Add(new Vector3i(dx, 0, dz));
                     }
                 }
             }
@@ -48,56 +46,33 @@ namespace Opxel.Voxels
             return offsets.ToArray();
         }
 
-        // per update only one chunk is loaded or deleted 
         public void Update()
         {
             Vector3 playerPosition = World.Player.Transform.Position;
-            Vector3i chunkPosition = GetPositionOfChunk((Vector3i)playerPosition);
+            Vector3i chunkPosition = World.Player.GetChunkPosition();
 
+            //Chunk deleting
+            foreach((Vector3i position, Chunk chunk) in ActiveChunks)
+            {
+                if((Vector2.Distance(position.Xz, chunkPosition.Xz) > (ChunkLoadDistance + Chunk.SizeX / 2)))
+                {
+                    ActiveChunks.Remove(position);
+                    chunk.Dispose();
+                    break;
+                }
+            }
+
+            //Chunk loading
             foreach(Vector3i chunkOffset in ChunkLoadOffsets)
             {
                 Vector3i iterPos = chunkPosition + chunkOffset;
-                if(!IsChunkLoaded(iterPos) && !LoadQueue.Contains(iterPos))
+                if(!IsChunkLoaded(iterPos))
                 {
-                    LoadQueue.Enqueue(iterPos);
+                    Chunk newChunk = new Chunk(World, iterPos);
+                    ActiveChunks.Add(iterPos, newChunk);
+                    break;
                 }
             }
-
-            foreach(KeyValuePair<Vector3i, Chunk> chunk in ActiveChunks.Where((posChunk) => Vector2.Distance(posChunk.Key.Xz, playerPosition.Xz) > (chunkLoadDistance + 1) && !DeleteQueue.Contains(posChunk.Value)))
-            {
-                DeleteQueue.Enqueue(chunk.Value);
-            }
-
-            deleteFlag = !deleteFlag;
-
-            if(deleteFlag && DeleteQueue.Count > 0)
-            {
-                Chunk chunk = DeleteQueue.Dequeue();
-                ActiveChunks.Remove(chunk.Position);
-                chunk.Dispose();
-            }
-
-            //chunk loading
-            if(!deleteFlag && LoadQueue.Count > 0)
-            {
-                Vector3i position = LoadQueue.Dequeue();
-                Chunk newChunk = new Chunk(World, position);
-                ActiveChunks.Add(position, newChunk);
-
-                if(TryGetNeighbour(position, FaceDirection.ZPositive, out var neighbourZPos))
-                {
-                    neighbourZPos!.ChunkMesh.GenerateSideFacesZNegative(newChunk.BlockData);
-                    newChunk.ChunkMesh.GenerateSideFacesZPositive(neighbourZPos.BlockData);
-                }
-
-            }
-        }
-
-        public Vector3i GetPositionOfChunk(Vector3i worldPosition)
-        {
-            return new Vector3i((int)(worldPosition.X - (worldPosition.X % Chunk.SizeX)),
-                    0,
-                    (int)(worldPosition.Z - (worldPosition.Z % Chunk.SizeZ)));
         }
 
         public bool IsChunkLoaded(Vector3i worldPosition)

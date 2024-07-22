@@ -61,7 +61,7 @@ namespace Opxel.Graphics
         {
             T[] data = new T[Length];
             Bind();
-            GL.GetBufferSubData(Target, IntPtr.Zero, ByteLength * Length, data);
+            GL.GetBufferSubData(Target, IntPtr.Zero, ByteLength, data);
             return data;
         }
 

@@ -8,6 +8,7 @@ using Opxel.Mathematics;
 using Opxel.Input;
 using Opxel.Content;
 using Opxel.Voxels;
+using System.ComponentModel;
 
 //TODO:
 //      Profiler for better performence (in vs)
@@ -45,8 +46,8 @@ namespace Opxel.Application
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
-            GL.Enable(EnableCap.CullFace);
-            GL.CullFace(CullFaceMode.Back);
+            //GL.Enable(EnableCap.CullFace);
+            //GL.CullFace(CullFaceMode.Back);
 
 #if DEBUG
             Debugger.SetupOpenGLDebugging();
@@ -98,6 +99,12 @@ namespace Opxel.Application
             if(world != null)
                 world.Player.Camera.AspectRation = e.Width / (float)e.Height;
             base.OnResize(e);   
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            Console.WriteLine("\n\n");
+            base.OnClosing(e);
         }
     }
 }

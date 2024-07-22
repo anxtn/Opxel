@@ -3,6 +3,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using Opxel.Graphics;
 using Opxel.Input;
 using Opxel.Mathematics;
+using Opxel.Voxels;
 using System;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -27,9 +28,15 @@ namespace Opxel.Application
             Camera = new Camera(Transform);
         }
 
-        public void Update(float deltaTime)
+        public Vector3i GetChunkPosition()
         {
+            return new Vector3i((int)(Transform.Position.X - (Transform.Position.X % Chunk.SizeX)),
+                    0,
+                    (int)(Transform.Position.Z - (Transform.Position.Z % Chunk.SizeZ)));
+        }
 
+        private void MoveUpdate(float deltaTime)
+        {
             if(OpxelInput.IsMouseButtonDown(MouseButton.Button1) && OpxelInput.MouseDelta != Vector2.Zero)
             {
                 _pitch -= OpxelInput.MouseDelta.Y * MouseSensitivity * deltaTime;
@@ -68,6 +75,11 @@ namespace Opxel.Application
             }
 
             Camera.OnTransformUpdate();
+        }
+
+        public void Update(float deltaTime)
+        {
+             MoveUpdate(deltaTime);
         }
     }
 }
