@@ -43,7 +43,8 @@ namespace Opxel.Voxels
                 }
             }
 
-            return offsets.ToArray();
+            Vector3i[] result =  offsets.OrderBy((pos) => pos.EuclideanLength).ToArray();
+            return result;
         }
 
         public void Update()
