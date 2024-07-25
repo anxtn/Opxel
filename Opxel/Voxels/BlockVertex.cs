@@ -6,17 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-//######## Vertexdata Concept #########
-//
-// 1   ubyte X FinalCoord =  (X / 16)
-// 1   ubyte Y
-// 1   ubyte Z
-// 1   ubyte s
-// 1   ubyte t
-// 1.5 ubyte sunLight (4 Bit R, 4 Bit G, 4 Bit B)
-// 1.5 ubyte environmentLight (4 Bit R, 4 Bit G, 4 Bit B) 
-//pack last 2 values to shot or smth
-//(packing not yet implemented)
 
 namespace Opxel.Voxels
 {

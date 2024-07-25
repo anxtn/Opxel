@@ -14,7 +14,7 @@ namespace Opxel.Voxels
         public readonly Chunk Chunk;
 
         private readonly ShaderProgram ChunkBlockShaderProgram;
-        private readonly PixelTexture BlockTexture;
+        private readonly Texture2D BlockTexture;
         private VertexArray VertexArray;
         private GraphicBuffer VertexBuffer;
         private GraphicBuffer IndexBuffer;
@@ -67,13 +67,15 @@ namespace Opxel.Voxels
                 out ChunkBlockData zPosNeighbourData,
                 out ChunkBlockData zNegNeighbourData);
 
-            for(int y = 1;y < Chunk.SizeY - 1;y++)
+
+
+            for(int y = 0;y < Chunk.SizeY;y++)
             {
                 if(layers[y].IsEmpty) continue;
 
                 ChunkLayer layer = layers[y];
-                ChunkLayer topLayer = layers[y + 1];
-                ChunkLayer buttomLayer = layers[y - 1];
+                ChunkLayer buttomLayer = y > 0 ? layers[y - 1] : ChunkLayer.Empty;
+                ChunkLayer topLayer = y < Chunk.SizeY - 1 ? layers[y + 1] : ChunkLayer.Empty;
 
                 for(int x = 0;x < Chunk.SizeX;x++)
                 {
@@ -85,7 +87,7 @@ namespace Opxel.Voxels
                         if(blockPalette.HasBlockTag(block, BlockTags.NoMesh))
                             continue;
 
-                        int neighbourBlock = -1;
+                        int neighbourBlock;
 
                         //XPositive
                         if(x < Chunk.SizeX - 1)
@@ -101,8 +103,6 @@ namespace Opxel.Voxels
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XPositive, block);
                         }
-
-
 
                         //XNegative
                         if(x > 0)
@@ -171,9 +171,9 @@ namespace Opxel.Voxels
                 }
             }
 
-            // 122 mcs
-            VertexBuffer.SetData(meshBuilder.VerticesList.ToArray());
-            IndexBuffer.SetData(meshBuilder.IndicesList.ToArray());
+            // 122 us
+            VertexBuffer.SetData(meshBuilder.VerticesList);
+            IndexBuffer.SetData(meshBuilder.IndicesList);
         }
 
         public void Dispose()

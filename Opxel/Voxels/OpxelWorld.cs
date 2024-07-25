@@ -13,12 +13,12 @@ namespace Opxel.Voxels
     {
         public readonly BlockPalette BlockPalette;
         public readonly ShaderProgram BlockShaderProgram;
-        public readonly PixelTexture BlockTexture;
+        public readonly Texture2D BlockTexture;
         public readonly WorldDataLoader WorldDataLoader;
         public readonly ChunkManager ChunkManager;
         public readonly OpxelPlayer Player;
 
-        public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, PixelTexture blockTexture)
+        public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, Texture2D blockTexture)
         {
             this.BlockPalette = blockPalette;
             this.BlockShaderProgram = blockShaderProgram;

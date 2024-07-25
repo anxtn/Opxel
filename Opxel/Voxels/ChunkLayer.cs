@@ -13,6 +13,8 @@ namespace Opxel.Voxels
         public int[]? Blocks;
         public readonly int YPosition;
 
+        public static readonly ChunkLayer Empty = new ChunkLayer(0);
+
         public ChunkLayer(int yPosition)
         {
             IsEmpty = true; 
