@@ -37,8 +37,8 @@ uniform float uRenderDistance;
 out vec4 fColor;
 
 const vec3 lightDirection = vec3(1f,-1f,0.5f);
-//const vec4 fadeColor = vec4(100f / 255f, 149f / 255f, 237f / 255f, 1f); //Cornflowerblue
-const vec4 fadeColor = vec4(1f,1f,1f, 1f);
+const vec4 fadeColor = vec4(100f / 255f, 149f / 255f, 237f / 255f, 1f); //Cornflowerblue
+//const vec4 fadeColor = vec4(1f,1f,1f, 1f);
 
 float calcFadeValue(float dist)
 {
