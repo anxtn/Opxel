@@ -35,7 +35,7 @@ namespace Opxel.Application
             
             CenterWindow();
 
-            string iconPath = "C:\\Users\\Anton Müller\\Desktop\\Opxel\\Opxel\\Resources\\Icons\\OpxcelIconPNG.png";
+            string iconPath = "../../../Resources/Icons/OpxcelIconPNG.png";
             Icon = ImageLoader.CreateWindowIcon(iconPath);
 
             IsVisible = true;
@@ -46,8 +46,8 @@ namespace Opxel.Application
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
-            //GL.Enable(EnableCap.CullFace);
-            //GL.CullFace(CullFaceMode.Back);
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
 
 #if DEBUG
             Debugger.SetupOpenGLDebugging();
