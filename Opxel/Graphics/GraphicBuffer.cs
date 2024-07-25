@@ -36,6 +36,21 @@ namespace Opxel.Graphics
             GL.BufferData(Target, ByteLength, data, Usage);
         }
 
+        public void SetData<T>(List<T> data) where T : unmanaged
+        {
+            Span<T> dataSpan = CollectionsMarshal.AsSpan(data);
+            SetData(dataSpan);
+        }
+
+        public void SetData<T>(Span<T> data) where T : unmanaged
+        {
+            Length = data.Length;
+            ByteLength = Length * Marshal.SizeOf<T>();
+            Bind();
+            ref T refData = ref data.GetPinnableReference();
+            GL.BufferData(Target, ByteLength,ref refData, Usage);
+        }
+
         public T[] ReadData<T>() where T : unmanaged
         {
             T[] data = new T[Length];

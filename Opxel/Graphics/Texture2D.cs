@@ -26,9 +26,9 @@ namespace Opxel.Graphics
             GL.BindTexture(TextureTarget.Texture2D, this.Handle);
             GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, data);
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            GL.TextureParameter(Handle, TextureParameterName.TextureWrapS,(int) TextureWrapMode.Repeat);
+            GL.TextureParameter(Handle, TextureParameterName.TextureWrapT,(int) TextureWrapMode.Repeat);
             GL.TextureParameter(Handle, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            //with NearestMipmapLinear there is no dark arthefakt in far 
-           
             GL.TextureParameter(Handle, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapLinear);
             GL.BindTexture(TextureTarget.Texture2D, 0);
             disposed = false;
