@@ -14,7 +14,7 @@ namespace Opxel.Voxels
         public readonly BlockPalette BlockPalette;
         public readonly ShaderProgram BlockShaderProgram;
         public readonly PixelTexture BlockTexture;
-        public readonly WorldGenerator WorldGenerator;
+        public readonly WorldDataLoader WorldDataLoader;
         public readonly ChunkManager ChunkManager;
         public readonly OpxelPlayer Player;
 
@@ -24,7 +24,7 @@ namespace Opxel.Voxels
             this.BlockShaderProgram = blockShaderProgram;
             this.BlockTexture = blockTexture;
 
-            WorldGenerator = new WorldGenerator();
+            WorldDataLoader = new WorldDataLoader(this);
             ChunkManager = new ChunkManager(this);
             Player = new OpxelPlayer();
         }

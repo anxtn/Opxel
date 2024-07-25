@@ -11,13 +11,11 @@ namespace Opxel.Voxels
     {
         public bool IsEmpty {  get;private set; }
         public int[]? Blocks;
-        public readonly Chunk Chunk;
         public readonly int YPosition;
 
-        public ChunkLayer(Chunk chunk, int yPosition)
+        public ChunkLayer(int yPosition)
         {
-            IsEmpty = true;
-            this.Chunk = chunk; 
+            IsEmpty = true; 
             this.YPosition = yPosition;
         }
 
@@ -42,7 +40,7 @@ namespace Opxel.Voxels
             {
                 return 0; // 0 = Air
             }
-            return Blocks[z * Chunk.SizeX + x];
+            return Blocks![z * Chunk.SizeX + x];
         }
 
         public int this[int x, int z] => GetBlock(x, z);

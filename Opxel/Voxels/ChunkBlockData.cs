@@ -10,16 +10,18 @@ namespace Opxel.Voxels
 {
     internal class ChunkBlockData
     {
-        public readonly Chunk Chunk;
         public readonly ChunkLayer[] Layers;
         public int NoAirBlockCount { get; private set; }
-        
-        public ChunkBlockData(Chunk chunk)
+
+        public ChunkBlockData()
         {
-            this.Chunk = chunk;
             NoAirBlockCount = 0;
             Layers = new ChunkLayer[Chunk.SizeY];
-            for(int i = 0;i < Layers.Length;i++) Layers[i] = new ChunkLayer(chunk,i);
+            for(int i = 0;i < Layers.Length;i++)
+            {
+                Layers[i] = new ChunkLayer(i);
+            }
+
 
         }
         public void SetBlock(int x, int y, int z, int block)

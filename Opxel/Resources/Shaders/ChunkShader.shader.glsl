@@ -32,17 +32,17 @@ in vec3 vNormal;
 in float vCameraDistance;
 
 uniform sampler2D uTexture;
+uniform float uRenderDistance;
 
 out vec4 fColor;
 
 const vec3 lightDirection = vec3(1f,-1f,0.5f);
 //const vec4 fadeColor = vec4(100f / 255f, 149f / 255f, 237f / 255f, 1f); //Cornflowerblue
 const vec4 fadeColor = vec4(1f,1f,1f, 1f);
-const float renderDistance = 155f;
 
 float calcFadeValue(float dist)
 {
-    float normalizedDistance = dist / renderDistance;
+    float normalizedDistance = dist / uRenderDistance;
     float funcValue = (normalizedDistance * normalizedDistance - 0.7f) * 3.4f;
     float fadeValue =  clamp(funcValue,0,1);
     return fadeValue;

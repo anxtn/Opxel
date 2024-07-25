@@ -36,27 +36,6 @@ namespace Opxel.Graphics
             GL.BufferData(Target, ByteLength, data, Usage);
         }
 
-        public void AppendData<T>(T[] data) where T : unmanaged
-        {
-            Debugger.Log(data.Length);
-
-            int newBufferHandle = GL.GenBuffer();
-
-            GL.BindBuffer(Target, newBufferHandle); 
-            GL.BufferData(Target, ByteLength + data.Length * Marshal.SizeOf<T>(), IntPtr.Zero, Usage);
-
-            GL.BindBuffer(BufferTarget.CopyReadBuffer, Handle);
-            GL.BindBuffer(BufferTarget.CopyWriteBuffer, newBufferHandle);  
-            GL.CopyBufferSubData(BufferTarget.CopyReadBuffer, BufferTarget.CopyWriteBuffer, 0, 0, ByteLength);
-            
-            GL.BindBuffer(Target, newBufferHandle); 
-            GL.BufferSubData(Target, ByteLength, Marshal.SizeOf<T>() * data.Length, data);
-            GL.DeleteBuffer(Handle);
-            Handle = newBufferHandle;
-            ByteLength += data.Length * Marshal.SizeOf<T>();
-            Length += data.Length;
-        }
-
         public T[] ReadData<T>() where T : unmanaged
         {
             T[] data = new T[Length];

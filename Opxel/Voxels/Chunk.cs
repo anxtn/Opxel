@@ -30,26 +30,10 @@ namespace Opxel.Voxels
             this.World = world;
             this.Position = position;
             ChunkMesh = new ChunkMesh(this);
-            BlockData = new ChunkBlockData(this);
+            BlockData = World.WorldDataLoader.LoadChunkBlockData(position);
 
             disposed = false;
-
-            GenerateTerrain();
             ChunkMesh.GenerateMesh();
-        }
-
-        public void GenerateTerrain()
-        {
-            Random rnd = new Random();
-            for(int x = 0;x < SizeX;x++)
-            {
-                for(int z = 0;z < SizeZ;z++)
-                {
-                    int height = (int)(MathF.Abs(World.WorldGenerator.GetHeight(Position.X + x, Position.Z + z) * 10f)) + 2;
-                    for(int y = 0;y < height;y++)
-                        BlockData.SetBlock(x, y, z, rnd.Next() % 2 == 0 ? 1 : 2);
-                }
-            }
         }
 
         public bool IsInside(int x, int y, int z)

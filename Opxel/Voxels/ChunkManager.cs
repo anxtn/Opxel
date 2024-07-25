@@ -15,8 +15,6 @@ namespace Opxel.Voxels
         public readonly OpxelWorld World;
 
         public readonly Dictionary<Vector3i, Chunk> ActiveChunks;
-        public readonly Queue<Chunk> DeleteQueue;
-        public readonly Queue<Vector3i> LoadQueue;
         public readonly int ChunkLoadDistance = Chunk.SizeX * 16 + 8;
         private Vector3i[] ChunkLoadOffsets;
 
@@ -24,9 +22,9 @@ namespace Opxel.Voxels
         {
             this.World = world;
             ActiveChunks = new Dictionary<Vector3i, Chunk>();
-            DeleteQueue = new Queue<Chunk>();
-            LoadQueue = new Queue<Vector3i>();
             ChunkLoadOffsets = CalcChunkLoadOffsets(ChunkLoadDistance);
+            world.BlockShaderProgram.Use();
+            world.BlockShaderProgram.SetUniform("uRenderDistance", (float)(ChunkLoadDistance-1));
         }
 
         private static Vector3i[] CalcChunkLoadOffsets(int radius)
@@ -43,7 +41,7 @@ namespace Opxel.Voxels
                 }
             }
 
-            Vector3i[] result =  offsets.OrderBy((pos) => pos.EuclideanLength).ToArray();
+            Vector3i[] result = [.. offsets.OrderBy((pos) => pos.EuclideanLength)];
             return result;
         }
 
