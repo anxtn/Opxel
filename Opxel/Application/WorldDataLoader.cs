@@ -1,12 +1,13 @@
 ﻿using OpenTK.Mathematics;
 using Opxel.Generation;
+using Opxel.Voxels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opxel.Voxels
+namespace Opxel.Application
 {
     internal class WorldDataLoader
     {
@@ -17,12 +18,12 @@ namespace Opxel.Voxels
 
         public WorldDataLoader(OpxelWorld world)
         {
-            this.World = world;
+            World = world;
             WorldGenerator = new WorldGenerator();
             LoadedBlockData = new Dictionary<Vector3i, ChunkBlockData>();
         }
 
-        public bool IsBlockDataLoaded(Vector3i chunkPosition)
+        public bool IsChunkDataLoaded(Vector3i chunkPosition)
         {
             return LoadedBlockData.ContainsKey(chunkPosition);
         }
@@ -42,25 +43,12 @@ namespace Opxel.Voxels
 
         public ChunkBlockData LoadChunkBlockData(Vector3i chunkPosition)
         {
-            if(IsBlockDataLoaded(chunkPosition))
+            if (IsChunkDataLoaded(chunkPosition))
             {
                 return LoadedBlockData[chunkPosition];
             }
 
-            ChunkBlockData blockData = new ChunkBlockData();
-            Random rnd = new Random();
-
-            for(int x = 0;x < Chunk.SizeX;x++)
-            {
-                for(int z = 0;z < Chunk.SizeZ;z++)
-                {
-                    int height = (int)(MathF.Abs(WorldGenerator.GetHeight(chunkPosition.X + x, chunkPosition.Z + z) * 10f)) + 2;
-                    for(int y = 0;y < height;y++)
-                        blockData.SetBlock(x, y, z, rnd.Next() % 2 == 0 ? 1 : 2);
-                }
-            }
-
-            return blockData;
+            return WorldGenerator.GenerateChunkData(chunkPosition);
         }
     }
 }
