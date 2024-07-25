@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 namespace Opxel.Voxels
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct ChunkVertex
+    internal struct BlockVertex
     {
         public float X;
         public float Y;
@@ -34,14 +34,14 @@ namespace Opxel.Voxels
         public float NormalY;
         public float NormalZ;
 
-        public ChunkVertex(float x, float y, float z)
+        public BlockVertex(float x, float y, float z)
         {
             this.X = x; 
             this.Y = y;
             this.Z = z;
         }
 
-        public ChunkVertex(Vector3i integerPosition, Vector2i integerUv)
+        public BlockVertex(Vector3i integerPosition, Vector2i integerUv)
         {
             this.X = integerPosition.X;
             this.Y = integerPosition.Y;
@@ -51,7 +51,7 @@ namespace Opxel.Voxels
             this.T = integerUv.Y / 16f;
         }
 
-        public ChunkVertex(Vector3i integerPosition, Vector2i integerUv, FaceDirection normalDirection)
+        public BlockVertex(Vector3i integerPosition, Vector2i integerUv, FaceDirection normalDirection)
         {
             this.X = integerPosition.X;
             this.Y = integerPosition.Y;
