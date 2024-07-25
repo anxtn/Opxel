@@ -24,7 +24,7 @@ namespace Opxel.Voxels
             ActiveChunks = new Dictionary<Vector3i, Chunk>();
             ChunkLoadOffsets = CalcChunkLoadOffsets(ChunkLoadDistance);
             world.BlockShaderProgram.Use();
-            world.BlockShaderProgram.SetUniform("uRenderDistance", (float)(ChunkLoadDistance-1));
+            world.BlockShaderProgram.SetUniform("uRenderDistance", (float)(ChunkLoadDistance-10));
         }
 
         private static Vector3i[] CalcChunkLoadOffsets(int radius)
