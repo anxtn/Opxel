@@ -6,8 +6,9 @@ using Opxel.Debug;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Opxel.Voxels;
 
-namespace Opxel.Voxels
+namespace Opxel.World
 {
     internal class ChunkMesh : IDisposable
     {
@@ -33,12 +34,12 @@ namespace Opxel.Voxels
 
         public ChunkMesh(Chunk chunk)
         {
-            this.Chunk = chunk;
+            Chunk = chunk;
             VertexBuffer = new GraphicBuffer(BufferTarget.ArrayBuffer);
             IndexBuffer = new GraphicBuffer(BufferTarget.ElementArrayBuffer);
             VertexArray = CreateVertexArray();
-            this.ChunkBlockShaderProgram = chunk.World.BlockShaderProgram;
-            this.BlockTexture = chunk.World.BlockTexture;
+            ChunkBlockShaderProgram = chunk.World.BlockShaderProgram;
+            BlockTexture = chunk.World.BlockTexture;
             disposed = false;
         }
 
@@ -61,36 +62,36 @@ namespace Opxel.Voxels
             ChunkMeshBuilder meshBuilder = new ChunkMeshBuilder(blockPalette);
             ChunkLayer[] layers = Chunk.BlockData.Layers;
 
-            Chunk.World.WorldDataLoader.LoadNeighbourData(Chunk.Position,
-                out ChunkBlockData xPosNeighbourData,
-                out ChunkBlockData xNegNeighbourData,
-                out ChunkBlockData zPosNeighbourData,
-                out ChunkBlockData zNegNeighbourData);
+            Chunk.World.ChunkManager.GetOrLoadNeighbourData(Chunk.Position,
+                out ChunkData xPosNeighbourData,
+                out ChunkData xNegNeighbourData,
+                out ChunkData zPosNeighbourData,
+                out ChunkData zNegNeighbourData);
 
 
 
-            for(int y = 0;y < Chunk.SizeY;y++)
+            for (int y = 0; y < Chunk.SizeY; y++)
             {
-                if(layers[y].IsEmpty) continue;
+                if (layers[y].IsEmpty) continue;
 
                 ChunkLayer layer = layers[y];
                 ChunkLayer buttomLayer = y > 0 ? layers[y - 1] : ChunkLayer.Empty;
                 ChunkLayer topLayer = y < Chunk.SizeY - 1 ? layers[y + 1] : ChunkLayer.Empty;
 
-                for(int x = 0;x < Chunk.SizeX;x++)
+                for (int x = 0; x < Chunk.SizeX; x++)
                 {
-                    for(int z = 0;z < Chunk.SizeZ;z++)
+                    for (int z = 0; z < Chunk.SizeZ; z++)
                     {
                         int block = layer[x, z];
 
                         //Wenn unsichtbar skippe
-                        if(blockPalette.HasBlockTag(block, BlockTags.NoMesh))
+                        if (blockPalette.HasBlockTag(block, BlockTags.NoMesh))
                             continue;
 
                         int neighbourBlock;
 
                         //XPositive
-                        if(x < Chunk.SizeX - 1)
+                        if (x < Chunk.SizeX - 1)
                         {
                             neighbourBlock = layer[x + 1, z];
                         }
@@ -99,13 +100,13 @@ namespace Opxel.Voxels
                             neighbourBlock = xPosNeighbourData.GetBlock(0, y, z);
                         }
 
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XPositive, block);
                         }
 
                         //XNegative
-                        if(x > 0)
+                        if (x > 0)
                         {
                             neighbourBlock = layer[x - 1, z];
                         }
@@ -114,7 +115,7 @@ namespace Opxel.Voxels
                             neighbourBlock = xNegNeighbourData.GetBlock(Chunk.SizeX - 1, y, z);
                         }
 
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XNegative, block);
                         }
@@ -123,7 +124,7 @@ namespace Opxel.Voxels
 
                         //YPositive
                         neighbourBlock = topLayer[x, z];
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.YPositive, block);
                         }
@@ -131,13 +132,13 @@ namespace Opxel.Voxels
 
                         //YNegative
                         neighbourBlock = buttomLayer[x, z];
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.YNegative, block);
                         }
 
                         //ZPositive
-                        if(z != Chunk.SizeZ - 1)
+                        if (z != Chunk.SizeZ - 1)
                         {
                             neighbourBlock = layer[x, z + 1];
                         }
@@ -146,14 +147,14 @@ namespace Opxel.Voxels
                             neighbourBlock = zPosNeighbourData.GetBlock(x, y, 0);
                         }
 
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZPositive, block);
                         }
 
 
                         //ZNegative
-                        if(z > 0)
+                        if (z > 0)
                         {
                             neighbourBlock = layer[x, z - 1];
                         }
@@ -162,7 +163,7 @@ namespace Opxel.Voxels
                             neighbourBlock = zNegNeighbourData.GetBlock(x, y, Chunk.SizeZ - 1);
                         }
 
-                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZNegative, block);
                         }
@@ -178,7 +179,7 @@ namespace Opxel.Voxels
 
         public void Dispose()
         {
-            if(disposed) return;
+            if (disposed) return;
 
             disposed = true;
             IndexBuffer.Dispose();

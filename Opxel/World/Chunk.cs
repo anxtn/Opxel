@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opxel.Voxels
+namespace Opxel.World
 {
     internal class Chunk : IDisposable
     {
         public readonly OpxelWorld World;
         public readonly ChunkMesh ChunkMesh;
-        public readonly ChunkBlockData BlockData;
+        public readonly ChunkData BlockData;
         public readonly Vector3i Position; // Y is always 0
 
         private bool disposed;
@@ -23,14 +23,14 @@ namespace Opxel.Voxels
         public static readonly int LayerSize = SizeX * SizeZ;
         public static readonly int VolumeSize = SizeX * SizeY * SizeZ;
 
-        
+
 
         public Chunk(OpxelWorld world, Vector3i position)
         {
-            this.World = world;
-            this.Position = position;
+            World = world;
+            Position = position;
             ChunkMesh = new ChunkMesh(this);
-            BlockData = World.WorldDataLoader.LoadChunkBlockData(position);
+            BlockData = World.ChunkManager.GetOrLoadChunkBlockData(position);
 
             disposed = false;
             ChunkMesh.GenerateMesh();
@@ -38,26 +38,26 @@ namespace Opxel.Voxels
 
         public bool IsInside(int x, int y, int z)
         {
-            return (x < SizeX) || (y < SizeY) || (z < SizeZ);
+            return x < SizeX || y < SizeY || z < SizeZ;
         }
 
         public static Vector3i PositionToChunkPosition(Vector3 Position)
         {
             return new Vector3i(
-                    (int)(Position.X - (Position.X % SizeX)),
-                    (int)(Position.Y - (Position.Y % SizeY)),
-                    (int)(Position.Z - (Position.Z % SizeZ))
+                    (int)(Position.X - Position.X % SizeX),
+                    (int)(Position.Y - Position.Y % SizeY),
+                    (int)(Position.Z - Position.Z % SizeZ)
                 );
         }
 
         public bool IsPositionInside(Vector3i worldPosition)
         {
-            return (worldPosition.X >= Position.X) && (worldPosition.X < (Position.X + SizeX)) && (worldPosition.Z >= Position.Z) && (worldPosition.Z < (Position.Z + SizeZ));
+            return worldPosition.X >= Position.X && worldPosition.X < Position.X + SizeX && worldPosition.Z >= Position.Z && worldPosition.Z < Position.Z + SizeZ;
         }
 
         public void Dispose()
         {
-            if(disposed) return;
+            if (disposed) return;
 
             disposed = true;
             ChunkMesh.Dispose();

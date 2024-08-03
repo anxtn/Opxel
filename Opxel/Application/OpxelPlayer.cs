@@ -3,7 +3,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using Opxel.Graphics;
 using Opxel.Input;
 using Opxel.Mathematics;
-using Opxel.Voxels;
+using Opxel.World;
 using System;
 using static System.Net.Mime.MediaTypeNames;
 

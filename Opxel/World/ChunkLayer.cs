@@ -5,11 +5,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opxel.Voxels
+namespace Opxel.World
 {
     internal class ChunkLayer
     {
-        public bool IsEmpty {  get;private set; }
+        public bool IsEmpty { get; private set; }
         public int[]? Blocks;
         public readonly int YPosition;
 
@@ -17,15 +17,15 @@ namespace Opxel.Voxels
 
         public ChunkLayer(int yPosition)
         {
-            IsEmpty = true; 
-            this.YPosition = yPosition;
+            IsEmpty = true;
+            YPosition = yPosition;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetBlock(int x, int z, int block)
         {
 
-            if(IsEmpty)
+            if (IsEmpty)
             {
                 Blocks = new int[Chunk.LayerSize];
                 IsEmpty = false;
@@ -38,7 +38,7 @@ namespace Opxel.Voxels
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetBlock(int x, int z)
         {
-            if(IsEmpty)
+            if (IsEmpty)
             {
                 return 0; // 0 = Air
             }

@@ -9,6 +9,7 @@ using Opxel.Input;
 using Opxel.Content;
 using Opxel.Voxels;
 using System.ComponentModel;
+using Opxel.World;
 
 //TODO:
 //      Profiler for better performence (in vs)
@@ -22,12 +23,12 @@ namespace Opxel.Application
         private AssetManager assetManager;
         private OpxelWorld world;
 
-        private static Vector2i resolution = new Vector2i(1920 ,1080 );
+        private static Vector2i resolution = new Vector2i((int)(1920.0/1.33) ,(int)(1080.0/1.33) );
 
         public OpxelInstance() :
         base(GameWindowSettings.Default, new NativeWindowSettings() {ClientSize = resolution, StartVisible = false, Title = "Opxel" })
         {
-            WindowState = WindowState.Fullscreen;
+            WindowState = WindowState.Normal;
         }
 
         protected override void OnLoad()
@@ -53,13 +54,13 @@ namespace Opxel.Application
             Debugger.SetupOpenGLDebugging();
 #endif
             world = new OpxelWorld(BlockPalette.Default,
-               assetManager.Load<ShaderProgram>("Shaders/ChunkShader.shader.glsl"),
-               assetManager.Load<PixelTexture>("Textures/BlockTextures.png"));
+               assetManager.Load<ShaderProgram>("Shaders/BlockShader.glsl"),
+               assetManager.Load<Texture2D>("Textures/BlockTextures.png"));
             world.Player.Speed *= 4;
 
             int h = world.BlockTexture.Handle;
 
-            world.Player.Transform.Position = new Vector3(0, 20, 0);
+            world.Player.Transform.Position = new Vector3(0, 30, 0);
 
             base.OnLoad();
         }
@@ -74,11 +75,12 @@ namespace Opxel.Application
 
             world.Player.Update(deltaTime);
             Mesh.DefaultShaderProgram.Use();
-            Mesh.DefaultShaderProgram.SetUniform("uViewProjection", world.Player.Camera.ViewProjectionMatrix, true);
+            Mesh.DefaultShaderProgram.SetUniform("uViewProjection", world.Player.Camera.ViewProjectionMatrix);
             world.BlockShaderProgram.Use();
-            world.BlockShaderProgram.SetUniform("uViewProjection", world.Player.Camera.ViewProjectionMatrix, true);
+            world.BlockShaderProgram.SetUniform("uViewProjection", world.Player.Camera.ViewProjectionMatrix);
             world.ChunkManager.Update();
-
+            world.ChunkManager.UnloadUnusedBlockData(10);
+            Console.WriteLine(world.ChunkManager.LoadedChunkData.Count);
             base.OnUpdateFrame(frameEventArgs);
         }
 
