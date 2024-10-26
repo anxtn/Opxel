@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Opxel.Graphics
 {
-    internal struct VertexAttribute
+    internal readonly struct VertexAttribute
     {
         public readonly GraphicBuffer Buffer;
         public readonly int ComponentCount;

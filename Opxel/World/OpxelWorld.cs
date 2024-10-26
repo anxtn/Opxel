@@ -17,6 +17,7 @@ namespace Opxel.World
         public readonly Texture2D BlockTexture;
         public readonly ChunkManager ChunkManager;
         public readonly OpxelPlayer Player;
+        public readonly BlockSystem BlockSystem;
 
         public OpxelWorld(BlockPalette blockPalette, ShaderProgram blockShaderProgram, Texture2D blockTexture)
         {
@@ -24,7 +25,8 @@ namespace Opxel.World
             BlockShaderProgram = blockShaderProgram;
             BlockTexture = blockTexture;
             ChunkManager = new ChunkManager(this);
-            Player = new OpxelPlayer();
+            Player = new OpxelPlayer(this);
+            BlockSystem = new BlockSystem(this);
         }
     }
 }

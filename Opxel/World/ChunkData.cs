@@ -28,7 +28,17 @@ namespace Opxel.World
                 Layers[i] = new ChunkLayer(i);
             }
         }
-        public void SetBlock(int x, int y, int z, int block)
+
+        public void SetBlock(Vector3i innerChunkPosition, int blockId)
+        {
+            SetBlock(innerChunkPosition.X, innerChunkPosition.Y, innerChunkPosition.Z, blockId);
+            if(ChunkManager.IsChunkLoaded(ChunkPosition))
+            {
+                ChunkManager.LoadedChunks[ChunkPosition].ChunkMesh.GenerateMesh();
+            }
+        }
+
+        public void SetBlock(int x, int y, int z, int blockId)
         {
 #if CHECK_BLOCK_POSITION
             if(!Chunk.IsInside(x, y, z))
@@ -36,23 +46,34 @@ namespace Opxel.World
                 throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{x}, y:{y}, z:{z})");
             }
 #endif
-            if (block != 0 && GetBlock(x, y, z) == 0)
+            if (blockId != 0 && GetBlock(x, y, z) == 0)
                 NoAirBlockCount++;
             else if (GetBlock(x, y, z) != 0)
                 NoAirBlockCount--;
 
-            Layers[y].SetBlock(x, z, block);
+            Layers[y].SetBlock(x, z, blockId);
         }
 
-        public int GetBlock(int x, int y, int z)
+        public int GetBlock(int innerChunkPosX, int innerChunkPosY, int innerChunkPosZ)
         {
 #if CHECK_BLOCK_POSITION
-            if(!Chunk.IsInside(x, y, z))
+            if(!Chunk.IsInside(innerChunkPosX, innerChunkPosY, innerChunkPosZ))
+            {
+                throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{innerChunkPosX}, y:{innerChunkPosY}, z:{innerChunkPosZ})");
+            }
+#endif
+            return Layers[innerChunkPosY].GetBlock(innerChunkPosX, innerChunkPosZ);
+        }
+
+        public int GetBlock(Vector3i innerChunkPos)
+        {
+#if CHECK_BLOCK_POSITION
+            if(!Chunk.IsInside(innerChunkPos.X, innerChunkPos.Y, innerChunkPos.Z))
             {
                 throw new ArgumentOutOfRangeException($"The block position was out of range (position: x:{x}, y:{y}, z:{z})");
             }
 #endif
-            return Layers[y].GetBlock(x, z);
+            return Layers[innerChunkPos.Y].GetBlock(innerChunkPos.X, innerChunkPos.Z);
         }
 
         ~ChunkData()

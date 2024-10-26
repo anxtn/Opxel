@@ -70,28 +70,28 @@ namespace Opxel.World
 
 
 
-            for (int y = 0; y < Chunk.SizeY; y++)
+            for(int y = 0;y < Chunk.SizeY;y++)
             {
-                if (layers[y].IsEmpty) continue;
+                if(layers[y].IsEmpty) continue;
 
                 ChunkLayer layer = layers[y];
                 ChunkLayer buttomLayer = y > 0 ? layers[y - 1] : ChunkLayer.Empty;
                 ChunkLayer topLayer = y < Chunk.SizeY - 1 ? layers[y + 1] : ChunkLayer.Empty;
 
-                for (int x = 0; x < Chunk.SizeX; x++)
+                for(int x = 0;x < Chunk.SizeX;x++)
                 {
-                    for (int z = 0; z < Chunk.SizeZ; z++)
+                    for(int z = 0;z < Chunk.SizeZ;z++)
                     {
                         int block = layer[x, z];
 
                         //Wenn unsichtbar skippe
-                        if (blockPalette.HasBlockTag(block, BlockTags.NoMesh))
+                        if(blockPalette.HasBlockTag(block, BlockTags.NoMesh))
                             continue;
 
                         int neighbourBlock;
 
                         //XPositive
-                        if (x < Chunk.SizeX - 1)
+                        if(x < Chunk.SizeX - 1)
                         {
                             neighbourBlock = layer[x + 1, z];
                         }
@@ -100,13 +100,13 @@ namespace Opxel.World
                             neighbourBlock = xPosNeighbourData.GetBlock(0, y, z);
                         }
 
-                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XPositive, block);
                         }
 
                         //XNegative
-                        if (x > 0)
+                        if(x > 0)
                         {
                             neighbourBlock = layer[x - 1, z];
                         }
@@ -115,7 +115,7 @@ namespace Opxel.World
                             neighbourBlock = xNegNeighbourData.GetBlock(Chunk.SizeX - 1, y, z);
                         }
 
-                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.XNegative, block);
                         }
@@ -124,7 +124,7 @@ namespace Opxel.World
 
                         //YPositive
                         neighbourBlock = topLayer[x, z];
-                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.YPositive, block);
                         }
@@ -132,13 +132,13 @@ namespace Opxel.World
 
                         //YNegative
                         neighbourBlock = buttomLayer[x, z];
-                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.YNegative, block);
                         }
 
                         //ZPositive
-                        if (z != Chunk.SizeZ - 1)
+                        if(z != Chunk.SizeZ - 1)
                         {
                             neighbourBlock = layer[x, z + 1];
                         }
@@ -147,14 +147,14 @@ namespace Opxel.World
                             neighbourBlock = zPosNeighbourData.GetBlock(x, y, 0);
                         }
 
-                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZPositive, block);
                         }
 
 
                         //ZNegative
-                        if (z > 0)
+                        if(z > 0)
                         {
                             neighbourBlock = layer[x, z - 1];
                         }
@@ -163,7 +163,7 @@ namespace Opxel.World
                             neighbourBlock = zNegNeighbourData.GetBlock(x, y, Chunk.SizeZ - 1);
                         }
 
-                        if (blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
+                        if(blockPalette.HasBlockTag(neighbourBlock, BlockTags.Transparent))
                         {
                             meshBuilder.AddBlockFace(new Vector3i(x, y, z), FaceDirection.ZNegative, block);
                         }
@@ -177,9 +177,14 @@ namespace Opxel.World
             IndexBuffer.SetData(meshBuilder.IndicesList);
         }
 
+        public void GenerateMeshFast()
+        {
+
+        }
+
         public void Dispose()
         {
-            if (disposed) return;
+            if(disposed) return;
 
             disposed = true;
             IndexBuffer.Dispose();

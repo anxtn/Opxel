@@ -12,6 +12,8 @@ namespace Opxel.Application
     internal class OpxelPlayer
     {
         public readonly Transform Transform;
+        public readonly float BlockSetRange = 10f;
+        public readonly OpxelWorld World;
         public float Speed { get; set; } = 4f;
         public float MouseSensitivity { get; set; } = 5f;
         public float MinPitch { get; set; } = -MathF.PI / 2f;
@@ -22,8 +24,9 @@ namespace Opxel.Application
         private float _pitch;
         private float _yaw;
 
-        public OpxelPlayer() : base()
+        public OpxelPlayer(OpxelWorld world) : base()
         {
+            this.World = world;
             Transform = new Transform();
             Camera = new Camera(Transform);
         }
@@ -77,9 +80,20 @@ namespace Opxel.Application
             Camera.OnTransformUpdate();
         }
 
+        public void BlockSetUpdate()
+        {
+            if(OpxelInput.IsMouseButtonDown(MouseButton.Right) && World.BlockSystem.Raycast(Transform.Position, Camera.Front, BlockSetRange,
+     out Vector3 hitWorldPos, out Vector3i hitWorldBeforeBlockPos))
+            {
+                Console.WriteLine("Setted Block ()");
+                World.ChunkManager.SetBlock(hitWorldBeforeBlockPos, 1);
+            }
+        }
+
         public void Update(float deltaTime)
         {
-             MoveUpdate(deltaTime);
+            BlockSetUpdate();
+            MoveUpdate(deltaTime);
         }
     }
 }

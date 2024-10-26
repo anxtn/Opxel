@@ -80,7 +80,6 @@ namespace Opxel.Application
             world.BlockShaderProgram.SetUniform("uViewProjection", world.Player.Camera.ViewProjectionMatrix);
             world.ChunkManager.Update();
             world.ChunkManager.UnloadUnusedBlockData(10);
-            Console.WriteLine(world.ChunkManager.LoadedChunkData.Count);
             base.OnUpdateFrame(frameEventArgs);
         }
 

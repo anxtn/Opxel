@@ -1,8 +1,10 @@
 ﻿using OpenTK.Mathematics;
 using Opxel.Debug;
 using Opxel.Generation;
+using Opxel.Mathematics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -16,9 +18,10 @@ namespace Opxel.World
         public readonly OpxelWorld World;
         public readonly WorldGenerator WorldGenerator;
         public readonly Dictionary<Vector3i, ChunkData> LoadedChunkData;
-        private readonly Dictionary<Vector3i, Chunk> LoadedChunks;
+        public readonly Dictionary<Vector3i, Chunk> LoadedChunks;
         public readonly int ChunkLoadDistance = Chunk.SizeX * 16 + 8;
-        private Vector3i[] ChunkLoadOffsets;
+
+        private Vector3i[] chunkLoadOffsets;
 
         public ChunkManager(OpxelWorld world)
         {
@@ -26,7 +29,7 @@ namespace Opxel.World
             WorldGenerator = new WorldGenerator(World);
             LoadedChunkData = new Dictionary<Vector3i, ChunkData>();
             LoadedChunks = new Dictionary<Vector3i, Chunk>();
-            ChunkLoadOffsets = CalcChunkLoadOffsets(ChunkLoadDistance);
+            chunkLoadOffsets = CalcChunkLoadOffsets(ChunkLoadDistance);
             world.BlockShaderProgram.Use();
             world.BlockShaderProgram.SetUniform("uRenderDistance", (float)(ChunkLoadDistance - 10));
         }
@@ -40,7 +43,8 @@ namespace Opxel.World
                 {
                     if (Vector2.Distance(Vector2.Zero, new Vector2(dx, dz)) <= radius)
                     {
-                        offsets.Add(new Vector3i(dx, 0, dz));
+                        Vector3i worldChunkPos = new Vector3i(dx - dx % Chunk.SizeX, 0, dz - dz % Chunk.SizeZ);
+                        offsets.Add(worldChunkPos);
                     }
                 }
             }
@@ -91,7 +95,7 @@ namespace Opxel.World
             }
 
             //Chunk loading
-            foreach (Vector3i chunkOffset in ChunkLoadOffsets)
+            foreach (Vector3i chunkOffset in chunkLoadOffsets)
             {
                 Vector3i iterPos = chunkPosition + chunkOffset;
                 if (!IsChunkLoaded(iterPos))
@@ -103,14 +107,93 @@ namespace Opxel.World
             }
         }
 
-        public bool IsChunkLoaded(Vector3i worldPosition)
+        public bool IsChunkLoaded(Vector3i chunkWorldPosition)
         {
-            return LoadedChunks.ContainsKey(worldPosition);
+            return LoadedChunks.ContainsKey(chunkWorldPosition);
         }
 
         public bool IsChunkDataLoaded(Vector3i chunkPosition)
         {
             return LoadedChunkData.ContainsKey(chunkPosition);
+        }
+
+        public bool IsBlockLoaded(Vector3i blockWorldPosition)
+        {
+            Vector3i innerChunkPos = new Vector3i(
+                blockWorldPosition.X % Chunk.SizeX,
+                blockWorldPosition.Y,
+                blockWorldPosition.Z % Chunk.SizeZ
+                );
+
+            Vector3i worldChunkPos = new Vector3i(
+                    blockWorldPosition.X - innerChunkPos.X,
+                    0,
+                    blockWorldPosition.Z - innerChunkPos.Z
+                );
+
+            return IsChunkLoaded(worldChunkPos);
+        }
+
+        public int GetBlock(Vector3i worldBlockPosition)
+        {
+            Vector3i innerChunkPos = new Vector3i(
+               worldBlockPosition.X % Chunk.SizeX,
+               worldBlockPosition.Y,
+               worldBlockPosition.Z % Chunk.SizeZ
+               );
+
+            Vector3i worldChunkPos = new Vector3i(
+                    worldBlockPosition.X - innerChunkPos.X,
+                    0,
+                    worldBlockPosition.Z - innerChunkPos.Z
+                );
+
+            Console.WriteLine(worldChunkPos);
+
+            return LoadedChunkData[worldChunkPos].GetBlock(innerChunkPos);
+        }
+
+        public bool TryGetBlock(Vector3i worldBlockPosition, out int blockId)
+        {
+            Vector3i innerChunkPos = new Vector3i(
+                worldBlockPosition.X % Chunk.SizeX,
+                worldBlockPosition.Y,
+                worldBlockPosition.Z % Chunk.SizeZ
+                );
+
+            Vector3i worldChunkPos = new Vector3i(
+                    worldBlockPosition.X - innerChunkPos.X,
+                    0,
+                    worldBlockPosition.Z - innerChunkPos.Z
+                );
+
+            if(LoadedChunkData.TryGetValue(worldChunkPos, out ChunkData? chunkData))
+            {
+                blockId = chunkData!.GetBlock(innerChunkPos);
+                return true;
+            }
+            else
+            {
+                blockId = -1;
+                return false;
+            }
+        }
+
+        public void SetBlock(Vector3i worldBlockPosition, int blockId)
+        {
+            Vector3i innerChunkPos = new Vector3i(
+               worldBlockPosition.X % Chunk.SizeX,
+               worldBlockPosition.Y,
+               worldBlockPosition.Z % Chunk.SizeZ
+               );
+
+            Vector3i worldChunkPos = new Vector3i(
+                    worldBlockPosition.X - innerChunkPos.X,
+                    0,
+                    worldBlockPosition.Z - innerChunkPos.Z
+                );
+
+            LoadedChunkData[worldChunkPos].SetBlock(innerChunkPos,blockId);
         }
 
         public void UnloadChunkBlockData(Vector3i chunkPosition)

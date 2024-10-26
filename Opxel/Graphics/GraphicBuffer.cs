@@ -51,7 +51,7 @@ namespace Opxel.Graphics
             GL.BufferData(Target, ByteLength,ref refData, Usage);
         }
 
-        public T[] ReadData<T>() where T : unmanaged
+        public T[] ReadData<T>() where T : unmanaged 
         {
             T[] data = new T[Length];
             Bind();

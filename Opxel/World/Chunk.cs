@@ -23,8 +23,6 @@ namespace Opxel.World
         public static readonly int LayerSize = SizeX * SizeZ;
         public static readonly int VolumeSize = SizeX * SizeY * SizeZ;
 
-
-
         public Chunk(OpxelWorld world, Vector3i position)
         {
             World = world;
@@ -41,11 +39,11 @@ namespace Opxel.World
             return x < SizeX || y < SizeY || z < SizeZ;
         }
 
-        public static Vector3i PositionToChunkPosition(Vector3 Position)
+        public static Vector3i WorldPositionToInnerChunkPosition(Vector3 Position)
         {
             return new Vector3i(
                     (int)(Position.X - Position.X % SizeX),
-                    (int)(Position.Y - Position.Y % SizeY),
+                    0,
                     (int)(Position.Z - Position.Z % SizeZ)
                 );
         }
